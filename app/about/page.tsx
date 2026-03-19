@@ -209,7 +209,7 @@ const AboutPage = () => {
             </span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-7xl font-bold text-[#F8FAFC] mb-4">
+          <h1 className="text-4xl sm:text-4xl lg:text-4xl xl:text-7xl font-bold text-[#F8FAFC] mb-4">
             Who We{' '}
             <span className="text-white">
               Are
