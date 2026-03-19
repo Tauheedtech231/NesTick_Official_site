@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -116,16 +116,10 @@ const ContactPage = () => {
     },
   ];
 
-  const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/nesticktech', color: 'hover:text-[#6366F1]' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/nesticktech', color: 'hover:text-[#0A66C2]' },
-    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/nesticktech', color: 'hover:text-[#1DA1F2]' },
-    { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/nesticktech', color: 'hover:text-[#E4405F]' },
-    { name: 'Facebook', icon: Facebook, href: 'https://facebook.com/nesticktech', color: 'hover:text-[#1877F2]' },
-  ];
+
 
   // Animation variants
-  const containerVariants = {
+  const containerVariants:Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -136,7 +130,7 @@ const ContactPage = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants:Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -150,7 +144,7 @@ const ContactPage = () => {
     },
   };
 
-  const headerVariants = {
+  const headerVariants:Variants = {
     hidden: { y: -20, opacity: 0 },
     visible: {
       y: 0,
@@ -211,7 +205,7 @@ const ContactPage = () => {
           </h1>
           
           <p className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-2xl mx-auto">
-            Have a project in mind? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
           </p>
         </motion.div>
 
@@ -380,7 +374,7 @@ const ContactPage = () => {
                     className="flex items-center gap-2 p-3 bg-[#22C55E]/10 border border-[#22C55E]/20 rounded-lg text-[#22C55E]"
                   >
                     <CheckCircle className="w-5 h-5" />
-                    <span className="text-sm">Message sent successfully! We'll get back to you soon.</span>
+                    <span className="text-sm">Message sent successfully! We&apos;ll get back to you soon.</span>
                   </motion.div>
                 )}
 
@@ -446,7 +440,7 @@ const ContactPage = () => {
               <div className="space-y-3">
                 <p className="text-sm text-[#F8FAFC] font-medium">Johar Town, Lahore</p>
                 <p className="text-xs text-[#94A3B8] leading-relaxed">
-                  We're located in the heart of Johar Town, Lahore. Easy access from main boulevard and nearby commercial areas.
+                  We&apos;re located in the heart of Johar Town, Lahore. Easy access from main boulevard and nearby commercial areas.
                 </p>
                 
                 {/* Location Image */}

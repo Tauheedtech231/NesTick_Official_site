@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Link from 'next/link';
 import {
   Globe2,
@@ -163,7 +163,7 @@ const ServicesPage = () => {
   }, []);
 
   // Optimized animation variants
-  const containerVariants = {
+  const containerVariants:Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -174,7 +174,7 @@ const ServicesPage = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants:Variants = {
     hidden: { y: 15, opacity: 0 },
     visible: {
       y: 0,
@@ -189,7 +189,7 @@ const ServicesPage = () => {
   };
 
   // Hero section animations - elements come from different sides
-  const heroVariants = {
+  const heroVariants:Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -200,7 +200,7 @@ const ServicesPage = () => {
     },
   };
 
-  const badgeVariants = {
+  const badgeVariants:Variants = {
     hidden: { scale: 0.8, opacity: 0 },
     visible: {
       scale: 1,
@@ -213,7 +213,7 @@ const ServicesPage = () => {
     },
   };
 
-  const headingVariants = {
+  const headingVariants:Variants = {
     hidden: { x: -30, opacity: 0 },
     visible: {
       x: 0,
@@ -227,7 +227,7 @@ const ServicesPage = () => {
     },
   };
 
-  const descriptionVariants = {
+  const descriptionVariants:Variants = {
     hidden: { x: 30, opacity: 0 },
     visible: {
       x: 0,
@@ -242,7 +242,7 @@ const ServicesPage = () => {
     },
   };
 
-  const searchVariants = {
+  const searchVariants:Variants = {
     hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
@@ -257,7 +257,7 @@ const ServicesPage = () => {
     },
   };
 
-  const filtersVariants = {
+  const filtersVariants:Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -312,7 +312,7 @@ const ServicesPage = () => {
               className="text-4xl md:text-5xl lg:text-5xl font-bold text-[#F8FAFC] mb-4"
             >
               Comprehensive{' '}
-              <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
+              <span className="text-white">
                 Digital Solutions
               </span>
             </motion.h1>
@@ -413,9 +413,7 @@ const ServicesPage = () => {
                       <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#6366F1]/30 transition-all duration-300 h-full flex flex-col">
                         {/* Header */}
                         <div className="flex items-start justify-between mb-4">
-                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.gradient} p-3 transform group-hover:scale-105 group-hover:rotate-2 transition-all duration-300`}>
-                            <Icon className="w-full h-full text-white" />
-                          </div>
+                          
                           <span className="text-xs px-2 py-1 bg-[#1E293B] text-[#94A3B8] rounded-lg border border-transparent group-hover:border-[#6366F1]/30 transition-colors duration-300">
                             {service.category}
                           </span>
@@ -470,7 +468,7 @@ const ServicesPage = () => {
                 </div>
                 <h3 className="text-xl font-bold text-[#F8FAFC] mb-2">No services found</h3>
                 <p className="text-[#94A3B8] mb-6">
-                  Try adjusting your search or filter to find what you're looking for.
+                  Try adjusting your search or filter to find what you&apos;re looking for.
                 </p>
                 <button
                   onClick={() => {
@@ -500,7 +498,7 @@ const ServicesPage = () => {
               Ready to Start Your Project?
             </h2>
             <p className="text-[#94A3B8] mb-8">
-              Let's discuss how our services can help you achieve your business goals.
+              Let&apos;s discuss how our services can help you achieve your business goals.
             </p>
             <Link
               href="/contact"

@@ -1,13 +1,13 @@
 // components/Hero.tsx
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Code2, Cpu, Globe, Shield, Zap } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 
-// Dynamically import NetworkSphere with no SSR
+// Dynamically import NetworkSphere with no SSR and loading state
 const NetworkSphere = dynamic(() => import('./NetworkSphere'), {
   ssr: false,
   loading: () => (
@@ -19,6 +19,7 @@ const NetworkSphere = dynamic(() => import('./NetworkSphere'), {
 
 const Hero = () => {
   const [currentTech, setCurrentTech] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Tech stack array for animation
   const techStacks = [
@@ -28,6 +29,18 @@ const Hero = () => {
     { name: 'Next.js', icon: Zap, color: '#F59E0B' },
     { name: 'TypeScript', icon: Shield, color: '#3B82F6' },
   ];
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Auto-cycle through tech stacks
   useEffect(() => {
@@ -39,7 +52,7 @@ const Hero = () => {
   }, [techStacks.length]);
 
   // Container variants - optimized
-  const containerVariants = {
+  const containerVariants:Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -51,7 +64,7 @@ const Hero = () => {
   };
 
   // Text variants - optimized
-  const textVariants = {
+  const textVariants:Variants = {
     hidden: { 
       y: 15, 
       opacity: 0
@@ -70,7 +83,7 @@ const Hero = () => {
   };
 
   // Badge variants
-  const badgeVariants = {
+  const badgeVariants:Variants = {
     hidden: { scale: 0.9, opacity: 0 },
     visible: {
       scale: 1,
@@ -85,7 +98,7 @@ const Hero = () => {
   };
 
   // Button variants - clear and optimized
-  const buttonVariants = {
+  const buttonVariants:Variants = {
     hidden: { y: 10, opacity: 0 },
     visible: {
       y: 0,
@@ -113,7 +126,7 @@ const Hero = () => {
   const CurrentIcon = techStacks[currentTech].icon;
 
   return (
-    <section className="relative min-h-screen bg-[#020617] overflow-hidden pt-12 sm:pt-16 lg:pt-24">
+    <section className="relative min-h-screen bg-[#020617] overflow-hidden pt-24 sm:pt-28 lg:pt-32">
       {/* Background orbs - reduced opacity */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-48 lg:w-64 h-48 lg:h-64 bg-[#6366F1]/10 rounded-full blur-3xl opacity-30" />
@@ -124,23 +137,23 @@ const Hero = () => {
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12 items-center min-h-[calc(100vh-120px)] lg:min-h-[calc(100vh-140px)]">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-120px)] lg:min-h-[calc(100vh-140px)]">
           
           {/* Left side - Content */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl mx-auto lg:mx-0 w-full space-y-4 sm:space-y-6 pt-4 sm:pt-6 lg:pt-0 z-10 order-1"
+            className="relative flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl mx-auto lg:mx-0 w-full space-y-5 sm:space-y-6 z-10 order-1"
           >
             {/* 🔥 Background Glow Effect */}
             <div className="absolute -top-10 left-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 w-72 h-72 bg-[#6366F1]/20 blur-3xl rounded-full -z-10" />
 
             {/* Badge */}
             <motion.div variants={badgeVariants}>
-              <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full backdrop-blur-md">
-                <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#6366F1]" />
-                <span className="text-xs sm:text-sm font-medium text-[#6366F1] tracking-wide">
+              <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full backdrop-blur-md">
+                <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-[#6366F1]" />
+                <span className="text-sm sm:text-base font-medium text-[#6366F1] tracking-wide">
                   Welcome to Nestick Tech
                 </span>
               </span>
@@ -148,7 +161,7 @@ const Hero = () => {
 
             {/* 🔥 Heading (Improved Typography) */}
             <motion.div variants={textVariants} className="w-full">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#F8FAFC] leading-[1.1] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#F8FAFC] leading-[1.1] tracking-tight">
                 Building{" "}
                 <span className="relative inline-block">
                   <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
@@ -217,8 +230,8 @@ const Hero = () => {
               {/* Primary */}
               <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="flex-1">
                 <Link
-                  href="/get-started"
-                  className="group relative block w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl overflow-hidden shadow-lg transition-all duration-300 text-center text-sm sm:text-base"
+                  href="/contact"
+                  className="group relative block w-full px-4 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl overflow-hidden shadow-lg transition-all duration-300 text-center text-sm sm:text-base"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     Get Started
@@ -234,7 +247,7 @@ const Hero = () => {
               <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="flex-1">
                 <Link
                   href="/portfolio"
-                  className="group block w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-[#0F172A]/80 backdrop-blur-md border border-[#1E293B] text-white font-semibold rounded-xl hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 text-center text-sm sm:text-base"
+                  className="group block w-full px-4 sm:px-6 py-3 sm:py-3.5 bg-[#0F172A]/80 backdrop-blur-md border border-[#1E293B] text-white font-semibold rounded-xl hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 text-center text-sm sm:text-base"
                 >
                   View Portfolio
                 </Link>
@@ -242,7 +255,7 @@ const Hero = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right side - Network Sphere - Visible on all devices, properly positioned */}
+          {/* Right side - Network Sphere - Always visible on all devices */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -251,17 +264,17 @@ const Hero = () => {
               duration: 0.6,
               ease: "easeOut"
             }}
-            className="relative w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[420px] mt-4 sm:mt-6 lg:mt-0 order-2 lg:order-2 z-0"
+            className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[450px] mt-2 sm:mt-4 lg:mt-0 order-2 z-0"
           >
             {/* Gradient overlay to blend with background - prevents visual clutter */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent pointer-events-none z-10 lg:hidden" />
             
             {/* Decorative elements - smaller on mobile */}
-            <div className="absolute -top-4 -right-4 w-16 h-16 sm:w-20 sm:h-20 bg-[#6366F1]/10 rounded-full blur-2xl" />
-            <div className="absolute -bottom-4 -left-4 w-20 h-20 sm:w-24 sm:h-24 bg-[#8B5CF6]/10 rounded-full blur-2xl" />
+            <div className="absolute -top-4 -right-4 w-20 h-20 sm:w-24 sm:h-24 bg-[#6366F1]/10 rounded-full blur-2xl" />
+            <div className="absolute -bottom-4 -left-4 w-24 h-24 sm:w-28 sm:h-28 bg-[#8B5CF6]/10 rounded-full blur-2xl" />
             
-            {/* Network Sphere - slightly smaller on mobile to not overpower content */}
-            <div className="w-full h-full scale-90 sm:scale-95 lg:scale-100">
+            {/* Network Sphere - responsive sizing */}
+            <div className={`w-full h-full ${isMobile ? 'scale-100' : 'scale-95 lg:scale-100'}`}>
               <NetworkSphere />
             </div>
             
@@ -271,8 +284,8 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Bottom gradient - REDUCED HEIGHT to minimize gap */}
-      <div className="absolute bottom-0 left-0 w-full h-8 sm:h-10 lg:h-12 bg-gradient-to-t from-[#020617] to-transparent" />
+      {/* Bottom gradient - smooth transition */}
+      <div className="absolute bottom-0 left-0 w-full h-16 sm:h-20 lg:h-24 bg-gradient-to-t from-[#020617] to-transparent" />
     </section>
   );
 };

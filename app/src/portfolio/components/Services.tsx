@@ -1,22 +1,12 @@
- 
 'use client';
 
 import { motion, Variants } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import {
-  Globe2,
-  ShoppingCart,
-  GraduationCap,
-  Smartphone,
-  Cpu,
-  Shield,
-  Sparkles,
-} from 'lucide-react';
 
 interface Service {
   id: number;
-  icon: React.ElementType;
+  icon: string; // Simple emoji ya text icon
   title: string;
   description: string;
   color: string;
@@ -24,7 +14,7 @@ interface Service {
 }
 
 const Services = () => {
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { 
     once: true, 
     amount: 0.2,
@@ -34,7 +24,7 @@ const Services = () => {
   const services: Service[] = [
     {
       id: 1,
-      icon: Globe2,
+      icon: '🌐', // Web globe emoji
       title: 'Web Development',
       description: 'Custom web applications built with modern frameworks like Next.js, React, and Node.js for scalable performance.',
       color: '#6366F1',
@@ -42,7 +32,7 @@ const Services = () => {
     },
     {
       id: 2,
-      icon: ShoppingCart,
+      icon: '🛒', // Shopping cart emoji
       title: 'POS Systems',
       description: 'Intelligent point of sale solutions with inventory management, analytics, and seamless payment integration.',
       color: '#8B5CF6',
@@ -50,7 +40,7 @@ const Services = () => {
     },
     {
       id: 3,
-      icon: GraduationCap,
+      icon: '📚', // Books emoji for LMS
       title: 'LMS Platforms',
       description: 'Comprehensive learning management systems with interactive courses, assessments, and progress tracking.',
       color: '#22C55E',
@@ -58,7 +48,7 @@ const Services = () => {
     },
     {
       id: 4,
-      icon: Smartphone,
+      icon: '📱', // Mobile phone emoji
       title: 'Mobile Apps',
       description: 'Native and cross-platform mobile applications for iOS and Android with exceptional user experiences.',
       color: '#F59E0B',
@@ -66,7 +56,7 @@ const Services = () => {
     },
     {
       id: 5,
-      icon: Cpu,
+      icon: '🤖', // Robot emoji for AI
       title: 'AI Solutions',
       description: 'Cutting-edge artificial intelligence and machine learning solutions to automate and optimize your business.',
       color: '#EF4444',
@@ -74,7 +64,7 @@ const Services = () => {
     },
     {
       id: 6,
-      icon: Shield,
+      icon: '🔒', // Lock emoji for Security
       title: 'IT / Cyber Security',
       description: 'Comprehensive security audits, threat monitoring, and protection for your digital infrastructure.',
       color: '#3B82F6',
@@ -82,7 +72,7 @@ const Services = () => {
     },
   ];
 
-  // Fixed container variants with proper Variants type
+  // Container variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -94,7 +84,7 @@ const Services = () => {
     },
   };
 
-  // Fixed item variants with proper structure
+  // Item variants
   const itemVariants: Variants = {
     hidden: { 
       y: 15, 
@@ -115,7 +105,7 @@ const Services = () => {
     },
   };
 
-  // Fixed header variants with proper structure - separate properties for each state
+  // Header variants
   const headerVariants: Variants = {
     hidden: { 
       x: -15, 
@@ -139,7 +129,7 @@ const Services = () => {
       ref={sectionRef}
       className="relative py-12 sm:py-16 lg:py-24 bg-[#020617] overflow-hidden"
     >
-      {/* Background decorative elements - subtle */}
+      {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#6366F1]/5 rounded-full blur-3xl opacity-40" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#8B5CF6]/5 rounded-full blur-3xl opacity-40" />
@@ -149,23 +139,23 @@ const Services = () => {
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header - Left aligned with badge - Reduced top margin */}
+        {/* Section Header */}
         <motion.div
           variants={headerVariants}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
           className="max-w-3xl mb-8 sm:mb-10 lg:mb-16 text-left"
         >
-          {/* Badge */}
+          {/* Badge - Using simple emoji */}
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full mb-3 sm:mb-4">
-            <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#6366F1]" />
+            <span className="text-[#6366F1]">✨</span>
             <span className="text-xs sm:text-sm font-medium text-[#6366F1]">Our Services</span>
           </div>
           
           {/* Heading */}
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-4 leading-tight">
             Comprehensive Digital{' '}
-            <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
+            <span className="text-white">
               Solutions
             </span>
           </h2>
@@ -190,8 +180,6 @@ const Services = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6"
         >
           {services.map((service) => {
-            const Icon = service.icon;
-            
             return (
               <motion.div
                 key={service.id}
@@ -203,21 +191,29 @@ const Services = () => {
                 className="group relative"
               >
                 {/* Border glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-xl opacity-0 group-hover:opacity-15 transition-opacity duration-300 blur-sm" />
+                <div 
+                  className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-sm"
+                  style={{ 
+                    background: `linear-gradient(to right, ${service.color}, ${service.color}80)`
+                  }}
+                />
                 
                 {/* Main Card */}
-                <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-4 sm:p-5 lg:p-6 hover:border-[#6366F1]/30 transition-all duration-300 h-full flex flex-col">
+                <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-4 sm:p-5 lg:p-6 hover:border-[#6366F1]/20 transition-all duration-300 h-full flex flex-col hover:shadow-none">
                   
-                  {/* Icon Container */}
+                  {/* Icon Container - Using emoji */}
                   <div className="relative mb-3 sm:mb-4">
-                    <div className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl bg-gradient-to-br ${service.gradient} p-2 sm:p-2.5 lg:p-3.5 transform group-hover:scale-105 group-hover:rotate-2 transition-all duration-300`}>
-                      <Icon className="w-full h-full text-white" />
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center transform group-hover:scale-105 group-hover:rotate-2 transition-all duration-300`}>
+                      {/* Emoji as icon - no library needed */}
+                      <span className="text-xl sm:text-2xl lg:text-3xl">
+                        {service.icon}
+                      </span>
                     </div>
                     
                     {/* Glow effect behind icon */}
                     <div 
-                      className="absolute -inset-2 rounded-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300 blur-md"
-                      style={{ background: `linear-gradient(to right, ${service.color}, ${service.color}80)` }}
+                      className="absolute -inset-2 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-md"
+                      style={{ background: `linear-gradient(to right, ${service.color}, ${service.color}40)` }}
                     />
                   </div>
 
@@ -233,7 +229,12 @@ const Services = () => {
 
                   {/* Corner Accent */}
                   <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden">
-                    <div className={`absolute top-0 right-0 w-12 h-12 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-500 transform rotate-12 translate-x-6 -translate-y-6`} />
+                    <div 
+                      className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-500 transform rotate-12 translate-x-6 -translate-y-6"
+                      style={{ 
+                        background: `linear-gradient(to bottom right, ${service.color}, ${service.color}80)`
+                      }}
+                    />
                   </div>
                 </div>
               </motion.div>

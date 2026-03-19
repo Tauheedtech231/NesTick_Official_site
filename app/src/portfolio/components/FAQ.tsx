@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { ChevronDown, HelpCircle, Mail, MessageCircle, Phone } from 'lucide-react';
 import Link from 'next/link';
 
@@ -67,7 +67,7 @@ const FAQ = () => {
   };
 
   // Optimized animation variants
-  const containerVariants = {
+  const containerVariants:Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -78,7 +78,7 @@ const FAQ = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants:Variants = {
     hidden: { y: 8, opacity: 0 },
     visible: {
       y: 0,
@@ -218,7 +218,7 @@ const FAQ = () => {
             </h3>
             
             <p className="text-[#94A3B8] text-sm mb-5 max-w-lg mx-auto">
-              Can't find the answer you're looking for? Reach out to our team.
+              Can&apos;t find the answer you&apos;re looking for? Reach out to our team.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-2 justify-center">

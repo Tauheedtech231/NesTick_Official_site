@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { 
   Mail, 
   Phone, 
@@ -52,7 +52,7 @@ const Footer = () => {
   ];
 
   // Animation variants
-  const containerVariants = {
+  const containerVariants:Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -63,7 +63,7 @@ const Footer = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants:Variants = {
     hidden: { y: 10, opacity: 0 },
     visible: {
       y: 0,
@@ -100,7 +100,7 @@ const Footer = () => {
           {/* Company Info - Logo and Description */}
           <motion.div variants={itemVariants} className="lg:col-span-4">
             <Link href="/" className="inline-block group mb-3">
-              <span className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent group-hover:from-[#8B5CF6] group-hover:to-[#6366F1] transition-all duration-300">
+              <span className="text-xl lg:text-2xl font-bold text-white">
                 Nestick Tech
               </span>
             </Link>

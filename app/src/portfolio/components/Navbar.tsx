@@ -15,7 +15,7 @@ const Navbar = () => {
     { name: 'Portfolio', href: '/portfolio' },
     { name: 'Tech Stack', href: '/tech-stack' },
     { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' },
+  
   ];
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16 lg:h-20"> {/* Height slightly increased */}
             {/* Company Name - Larger font */}
             <Link href="/" className="flex-shrink-0 group">
-              <span className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent group-hover:from-[#8B5CF6] group-hover:to-[#6366F1] transition-all duration-300">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
                 Nestick Tech
               </span>
             </Link>
@@ -74,7 +74,7 @@ const Navbar = () => {
             {/* Desktop CTA Button - Larger */}
             <div className="hidden lg:flex lg:items-center">
               <Link
-                href="/get-started"
+                href="/contact"
                 className="relative px-6 py-2.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-sm lg:text-base font-semibold rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-lg hover:shadow-[#6366F1]/25 hover:scale-105 active:scale-95"
               >
                 <span className="relative z-10">Get Started</span>

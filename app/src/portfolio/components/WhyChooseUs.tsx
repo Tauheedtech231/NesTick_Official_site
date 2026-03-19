@@ -1,9 +1,9 @@
 // components/WhyChooseUs.tsx
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Rocket,
@@ -13,10 +13,7 @@ import {
   HeadphonesIcon,
   TrendingUp,
   Sparkles,
-  ArrowRight,
   CheckCircle,
-  Check,
-  CheckCheck
 } from 'lucide-react';
 
 interface Reason {
@@ -29,6 +26,7 @@ interface Reason {
 
 const WhyChooseUs = () => {
   const sectionRef = useRef(null);
+  const [currentStat, setCurrentStat] = useState(0);
   const isInView = useInView(sectionRef, { 
     once: true, 
     amount: 0.2,
@@ -88,8 +86,23 @@ const WhyChooseUs = () => {
     { value: '24/7', label: 'Support Available', icon: CheckCircle },
   ];
 
+  // Auto-slider for statistics on mobile/tablet
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (isInView) {
+      timer = setInterval(() => {
+        setCurrentStat((prev) => (prev + 1) % statistics.length);
+      }, 3000); // Change every 3 seconds
+    }
+    
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isInView, statistics.length]);
+
   // Animation variants
-  const containerVariants = {
+  const containerVariants:Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -100,7 +113,7 @@ const WhyChooseUs = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants:Variants = {
     hidden: { y: 15, opacity: 0 },
     visible: {
       y: 0,
@@ -114,7 +127,7 @@ const WhyChooseUs = () => {
     },
   };
 
-  const statVariants = {
+  const statVariants:Variants = {
     hidden: { scale: 0.9, opacity: 0 },
     visible: {
       scale: 1,
@@ -125,6 +138,31 @@ const WhyChooseUs = () => {
         damping: 12,
       },
     },
+  };
+
+  // Slider animation variants
+  const sliderVariants:Variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      },
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 100 : -100,
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+      },
+    }),
   };
 
   return (
@@ -151,12 +189,12 @@ const WhyChooseUs = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-[#0F172A] border border-[#1E293B]">
             <Sparkles className="w-4 h-4 text-[#6366F1]" />
-            <span className="text-sm font-medium text-[#94A3B8]">Why Choose Us</span>
+            <span className="text-sm font-medium bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">Why Choose Us</span>
           </div>
           
           <h2 className="text-4xl md:text-4xl lg:text-4xl font-bold text-[#F8FAFC] mb-4">
             Why Businesses{' '}
-            <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
+            <span className="text-white">
               Trust Us
             </span>
           </h2>
@@ -166,40 +204,97 @@ const WhyChooseUs = () => {
           </p>
         </motion.div>
 
-        {/* Statistics Row - With only tick icons */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 lg:mb-20"
-        >
-          {statistics.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
+        {/* Statistics - Grid on desktop, Slider on mobile/tablet */}
+        <div className="mb-16 lg:mb-20">
+          {/* Desktop Grid (hidden on mobile/tablet) */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={isInView ? 'visible' : 'hidden'}
+            className="hidden lg:grid lg:grid-cols-4 gap-4"
+          >
+            {statistics.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={index}
+                  variants={statVariants}
+                  whileHover={{ y: -3 }}
+                  className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-5 text-center group transition-all duration-200"
+                >
+                  {/* Tick Icon */}
+                  <div className="w-8 h-8 rounded-full bg-[#6366F1]/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-[#6366F1]/20 transition-colors duration-200">
+                    <Icon className="w-4 h-4 text-[#6366F1]" />
+                  </div>
+                  
+                  {/* Value */}
+                  <div className="text-xl lg:text-2xl font-bold text-[#F8FAFC] mb-1">
+                    {stat.value}
+                  </div>
+                  
+                  {/* Label */}
+                  <div className="text-xs text-[#94A3B8]">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Mobile/Tablet Slider (visible below lg breakpoint) */}
+          <div className="lg:hidden">
+            <AnimatePresence mode="wait" custom={currentStat}>
               <motion.div
-                key={index}
-                variants={statVariants}
-                whileHover={{ y: -3 }}
-                className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-5 text-center group transition-all duration-200"
+                key={currentStat}
+                custom={currentStat}
+                variants={sliderVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-8 text-center max-w-md mx-auto"
               >
-                {/* Tick Icon */}
-                <div className="w-8 h-8 rounded-full bg-[#6366F1]/10 flex items-center justify-center mx-auto mb-2 group-hover:bg-[#6366F1]/20 transition-colors duration-200">
-                  <Icon className="w-4 h-4 text-[#6366F1]" />
-                </div>
-                
-                {/* Value */}
-                <div className="text-xl lg:text-2xl font-bold text-[#F8FAFC] mb-1">
-                  {stat.value}
-                </div>
-                
-                {/* Label */}
-                <div className="text-xs text-[#94A3B8]">
-                  {stat.label}
-                </div>
+                {(() => {
+                  const stat = statistics[currentStat];
+                  const Icon = stat.icon;
+                  return (
+                    <>
+                      {/* Tick Icon */}
+                      <div className="w-12 h-12 rounded-full bg-[#6366F1]/10 flex items-center justify-center mx-auto mb-4">
+                        <Icon className="w-6 h-6 text-[#6366F1]" />
+                      </div>
+                      
+                      {/* Value */}
+                      <div className="text-3xl font-bold text-[#F8FAFC] mb-2">
+                        {stat.value}
+                      </div>
+                      
+                      {/* Label */}
+                      <div className="text-sm text-[#94A3B8]">
+                        {stat.label}
+                      </div>
+                    </>
+                  );
+                })()}
               </motion.div>
-            );
-          })}
-        </motion.div>
+            </AnimatePresence>
+
+            {/* Slider Dots */}
+            <div className="flex justify-center gap-2 mt-4">
+              {statistics.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentStat(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentStat 
+                      ? 'w-6 bg-[#6366F1]' 
+                      : 'bg-[#1E293B] hover:bg-[#6366F1]/50'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
 
         {/* Reasons Grid - Simple Cards without shadow */}
         <motion.div
@@ -219,10 +314,6 @@ const WhyChooseUs = () => {
               >
                 {/* Simple Card - No shadow, just border */}
                 <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-5 hover:border-[#6366F1]/30 transition-all duration-200 h-full">
-                  
-                 
-                  
-
                   {/* Title */}
                   <h3 className="text-base font-semibold text-[#F8FAFC] mb-2 group-hover:text-[#6366F1] transition-colors duration-200">
                     {reason.title}
@@ -247,10 +338,9 @@ const WhyChooseUs = () => {
         >
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity duration-200 group"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity duration-200"
           >
             <span>Ready to start your project?</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
           </Link>
         </motion.div>
       </div>

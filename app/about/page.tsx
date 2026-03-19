@@ -1,7 +1,7 @@
 // app/about/page.tsx
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
@@ -122,7 +122,7 @@ const AboutPage = () => {
   ];
 
   // Animation variants
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -133,7 +133,7 @@ const AboutPage = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants:Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -147,10 +147,22 @@ const AboutPage = () => {
     },
   };
 
-  const lineVariants = {
+  const lineVariants:Variants = {
     hidden: { scaleY: 0, opacity: 0 },
     visible: {
       scaleY: 1,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const horizontalLineVariants:Variants = {
+    hidden: { scaleX: 0, opacity: 0 },
+    visible: {
+      scaleX: 1,
       opacity: 1,
       transition: {
         duration: 0.8,
@@ -192,20 +204,20 @@ const AboutPage = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-[#0F172A]/80 backdrop-blur-sm border border-[#1E293B]">
             <Users className="w-4 h-4 text-[#6366F1]" />
-            <span className="text-xs lg:text-sm font-medium text-[#94A3B8]">
+            <span className="text-xs lg:text-sm font-medium bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
               About Us
             </span>
           </div>
           
           <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-7xl font-bold text-[#F8FAFC] mb-4">
             Who We{' '}
-            <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
+            <span className="text-white">
               Are
             </span>
           </h1>
           
           <p className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-2xl mx-auto">
-            We're a passionate team of developers, designers, and strategists dedicated to building innovative digital solutions that help businesses thrive.
+            We&apos;re a passionate team of developers, designers, and strategists dedicated to building innovative digital solutions that help businesses thrive.
           </p>
         </motion.div>
 
@@ -250,7 +262,7 @@ const AboutPage = () => {
               Founded in 2020, Nestick Tech started with a simple mission: to help businesses leverage technology for growth and innovation. What began as a small team of passionate developers has grown into a full-service digital agency serving clients worldwide.
             </p>
             <p className="text-sm lg:text-base text-[#94A3B8] leading-relaxed">
-              Today, we're proud to have delivered 50+ successful projects across various industries, from e-commerce and education to healthcare and finance.
+              Today, we&apos;re proud to have delivered 50+ successful projects across various industries, from e-commerce and education to healthcare and finance.
             </p>
           </motion.div>
 
@@ -276,7 +288,7 @@ const AboutPage = () => {
           </motion.div>
         </motion.div>
 
-        {/* Team Hierarchy - Improved Tree Structure */}
+        {/* Team Hierarchy - Complete Tree Structure */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -331,28 +343,31 @@ const AboutPage = () => {
               </div>
             </motion.div>
 
-            {/* Horizontal line connector */}
+            {/* Horizontal line connector for management level */}
             <div className="relative w-full max-w-2xl h-0.5 mb-16">
               <motion.div 
-                initial={{ scaleX: 0, opacity: 0 }}
-                animate={{ scaleX: 1, opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+                variants={horizontalLineVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.6 }}
                 className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#6366F1] to-transparent"
                 style={{ transformOrigin: 'left' }}
               />
               
               {/* Vertical lines down to management */}
               <motion.div 
-                initial={{ scaleY: 0, opacity: 0 }}
-                animate={{ scaleY: 1, opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
+                variants={lineVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.7 }}
                 className="absolute -bottom-8 left-1/4 w-0.5 h-8 bg-gradient-to-b from-[#6366F1] to-transparent"
                 style={{ transformOrigin: 'top' }}
               />
               <motion.div 
-                initial={{ scaleY: 0, opacity: 0 }}
-                animate={{ scaleY: 1, opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
+                variants={lineVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.7 }}
                 className="absolute -bottom-8 right-1/4 w-0.5 h-8 bg-gradient-to-b from-[#6366F1] to-transparent"
                 style={{ transformOrigin: 'top' }}
               />
@@ -369,39 +384,58 @@ const AboutPage = () => {
                   className="relative"
                 >
                   <div className="relative">
-                    {/* Horizontal line connector between management and technical */}
-                    {index === 0 && (
-                      <motion.div 
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        animate={{ scaleX: 1, opacity: 1 }}
-                        transition={{ delay: 1.4, duration: 0.6 }}
-                        className="absolute -bottom-12 left-1/2 w-32 h-0.5 bg-gradient-to-r from-[#22C55E] to-transparent"
-                        style={{ transformOrigin: 'left' }}
-                      />
-                    )}
-                    {index === 1 && (
-                      <motion.div 
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        animate={{ scaleX: 1, opacity: 1 }}
-                        transition={{ delay: 1.4, duration: 0.6 }}
-                        className="absolute -bottom-12 right-1/2 w-32 h-0.5 bg-gradient-to-l from-[#22C55E] to-transparent"
-                        style={{ transformOrigin: 'right' }}
-                      />
-                    )}
-                    
-                    {/* Vertical line down */}
+                    {/* Horizontal line connectors from management to next level */}
                     <motion.div 
-                      initial={{ scaleY: 0, opacity: 0 }}
-                      animate={{ scaleY: 1, opacity: 1 }}
-                      transition={{ delay: 1.2, duration: 0.5 }}
-                      className="absolute -bottom-8 left-1/2 w-0.5 h-8 bg-gradient-to-b from-[#22C55E] to-transparent"
-                      style={{ transformOrigin: 'top' }}
+                      variants={horizontalLineVariants}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ delay: 1.3 }}
+                      className="absolute -bottom-12 left-1/2 w-32 h-0.5 bg-gradient-to-r from-[#22C55E] to-transparent"
+                      style={{ 
+                        transformOrigin: 'left',
+                        display: index === 0 ? 'block' : 'none'
+                      }}
+                    />
+                    <motion.div 
+                      variants={horizontalLineVariants}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ delay: 1.3 }}
+                      className="absolute -bottom-12 right-1/2 w-32 h-0.5 bg-gradient-to-l from-[#F59E0B] to-transparent"
+                      style={{ 
+                        transformOrigin: 'right',
+                        display: index === 1 ? 'block' : 'none'
+                      }}
                     />
                     
-                    <div className="bg-gradient-to-r from-[#22C55E] to-[#86EFAC] p-[2px] rounded-xl">
+                    {/* Vertical lines down to next level */}
+                    <motion.div 
+                      variants={lineVariants}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ delay: 1.4 }}
+                      className="absolute -bottom-8 left-1/2 w-0.5 h-8 bg-gradient-to-b from-[#22C55E] to-transparent"
+                      style={{ 
+                        transformOrigin: 'top',
+                        display: index === 0 ? 'block' : 'none'
+                      }}
+                    />
+                    <motion.div 
+                      variants={lineVariants}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ delay: 1.4 }}
+                      className="absolute -bottom-8 left-1/2 w-0.5 h-8 bg-gradient-to-b from-[#F59E0B] to-transparent"
+                      style={{ 
+                        transformOrigin: 'top',
+                        display: index === 1 ? 'block' : 'none'
+                      }}
+                    />
+                    
+                    <div className={`bg-gradient-to-r ${member.color} p-[2px] rounded-xl`}>
                       <div className="bg-[#0F172A] rounded-xl p-4">
                         <div className="flex items-center gap-3">
-                          <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#22C55E]">
+                          <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#22C55E]" style={{ borderColor: index === 0 ? '#22C55E' : '#F59E0B' }}>
                             <Image
                               src={member.image}
                               alt={member.name}
@@ -411,13 +445,44 @@ const AboutPage = () => {
                           </div>
                           <div>
                             <p className="text-sm font-semibold text-[#F8FAFC]">{member.name}</p>
-                            <p className="text-xs text-[#22C55E]">{member.role}</p>
+                            <p className="text-xs" style={{ color: index === 0 ? '#22C55E' : '#F59E0B' }}>{member.role}</p>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </motion.div>
+              ))}
+            </div>
+
+            {/* Level 3 Connectors - Horizontal line between management and technical */}
+            <div className="relative w-full max-w-4xl h-0.5 mb-16">
+              <motion.div 
+                variants={horizontalLineVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 1.5 }}
+                className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#22C55E] via-[#F59E0B] to-[#EF4444]"
+                style={{ transformOrigin: 'left' }}
+              />
+              
+              {/* Vertical lines down to technical team */}
+              {[0, 1, 2].map((i) => (
+                <motion.div 
+                  key={i}
+                  variants={lineVariants}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{ delay: 1.6 + i * 0.1 }}
+                  className="absolute -bottom-8 w-0.5 h-8 bg-gradient-to-b"
+                  style={{ 
+                    left: `${25 + i * 25}%`,
+                    background: i === 0 ? 'linear-gradient(to bottom, #EF4444, transparent)' : 
+                                i === 1 ? 'linear-gradient(to bottom, #EC4899, transparent)' : 
+                                'linear-gradient(to bottom, #06B6D4, transparent)',
+                    transformOrigin: 'top'
+                  }}
+                />
               ))}
             </div>
 
@@ -428,13 +493,13 @@ const AboutPage = () => {
                   key={member.id}
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 1.6 + index * 0.1, duration: 0.5 }}
+                  transition={{ delay: 1.8 + index * 0.1, duration: 0.5 }}
                   className="relative"
                 >
-                  <div className="bg-gradient-to-r from-[#EF4444] to-[#F87171] p-[2px] rounded-xl">
+                  <div className={`bg-gradient-to-r ${member.color} p-[2px] rounded-xl`}>
                     <div className="bg-[#0F172A] rounded-xl p-4">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#EF4444]">
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden border-2" style={{ borderColor: member.color.split(' ')[1] }}>
                           <Image
                             src={member.image}
                             alt={member.name}
@@ -444,7 +509,7 @@ const AboutPage = () => {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-[#F8FAFC]">{member.name}</p>
-                          <p className="text-xs text-[#EF4444]">{member.role}</p>
+                          <p className="text-xs" style={{ color: member.color.split(' ')[1] }}>{member.role}</p>
                         </div>
                       </div>
                     </div>
@@ -455,11 +520,11 @@ const AboutPage = () => {
           </div>
         </motion.div>
 
-        {/* Contact Us Section - Replaced Join Our Team */}
+        {/* Contact Us Section */}
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.8 }}
+          transition={{ delay: 2.0 }}
           className="mt-16"
         >
           <h2 className="text-2xl lg:text-3xl font-bold text-[#F8FAFC] text-center mb-8">
@@ -478,7 +543,7 @@ const AboutPage = () => {
                   variants={itemVariants}
                   initial="hidden"
                   animate="visible"
-                  transition={{ delay: 1.9 + index * 0.1 }}
+                  transition={{ delay: 2.1 + index * 0.1 }}
                   whileHover={{ y: -4 }}
                   className="group relative"
                 >
@@ -502,7 +567,7 @@ const AboutPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.2 }}
+            transition={{ delay: 2.4 }}
             className="text-center mt-8"
           >
             <Link
