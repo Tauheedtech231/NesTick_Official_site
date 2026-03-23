@@ -141,7 +141,7 @@ const Navbar = () => {
               style={{ transitionDelay: isOpen ? '300ms' : '0ms' }}
             >
               <Link
-                href="/get-started"
+                href="/contact"
                 onClick={() => setIsOpen(false)}
                 className="block w-full px-6 py-3.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-center text-base font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300"
               >
