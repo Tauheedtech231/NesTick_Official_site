@@ -2,7 +2,6 @@
 'use client';
 
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import { useInView } from 'framer-motion';
 import { useRef, useState, useMemo, useCallback, useEffect } from 'react';
 import { 
   Building2, 
@@ -33,7 +32,7 @@ interface Product {
   status: 'Live' | 'In Development' | 'Concept';
   tags: string[];
   gradient: string;
-  icon:LucideIcon;
+  icon: LucideIcon;
   color: string;
 }
 
@@ -47,7 +46,6 @@ interface FormData {
 
 const ProductsPage = () => {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -289,7 +287,7 @@ const ProductsPage = () => {
             <motion.div
               variants={introContainerVariants}
               initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
+              animate="visible"
               className="text-center max-w-3xl mx-auto mb-12 lg:mb-16"
             >
               {/* Badge - From Top */}
@@ -309,7 +307,7 @@ const ProductsPage = () => {
               {/* Heading - From Top */}
               <motion.h2 
                 variants={fromTopVariants}
-                className="text-3xl md:text-4xl font-bold text-[#F8FAFC] mb-3"
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#F8FAFC] mb-3"
               >
                 Owned{' '}
                 <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
@@ -348,7 +346,7 @@ const ProductsPage = () => {
             {/* Search Input */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
               className="max-w-2xl mx-auto mb-10 lg:mb-12"
             >
@@ -388,7 +386,7 @@ const ProductsPage = () => {
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
+              animate="visible"
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
             >
               {filteredProducts.map((product) => {
@@ -476,12 +474,40 @@ const ProductsPage = () => {
                 </p>
                 <button
                   onClick={clearSearch}
-                  className="px-6 py-3 bg-[#6366F1] text-white rounded-xl hover:bg-[#8B5CF6] transition-all duration-300"
+                  className="px-6 py-3 bg-[#6366F1] text-white rounded-xl hover:bg-[#8B5CF6] transition-all duration-300 hover:shadow-lg hover:shadow-[#6366F1]/25 hover:-translate-y-0.5"
                 >
                   Clear Search
                 </button>
               </motion.div>
             )}
+
+            {/* CTA Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="mt-16 pt-8 border-t border-[#1E293B] text-center"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+              >
+                <h3 className="text-xl font-bold text-white mb-3">
+                  Need a Custom Solution?
+                </h3>
+                <p className="text-[#94A3B8] mb-6">
+                  Don&apos;t see what you&apos;re looking for? Let&apos;s build something unique for your business.
+                </p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#0F172A] border border-[#1E293B] text-[#F8FAFC] font-medium rounded-xl hover:border-[#6366F1] hover:text-[#6366F1] transition-all duration-300 group"
+                >
+                  <span>Contact Us</span>
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
       </main>
@@ -500,6 +526,7 @@ const ProductsPage = () => {
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              transition={{ type: "spring", damping: 20, stiffness: 200 }}
               className="relative w-full max-w-2xl bg-[#0F172A] border border-[#1E293B] rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
             >
               {/* Modal Header */}
@@ -527,7 +554,13 @@ const ProductsPage = () => {
 
               {/* Form */}
               {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+                <motion.form 
+                  onSubmit={handleSubmit} 
+                  className="p-4 sm:p-6 space-y-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
                   {/* Name */}
                   <div>
                     <label className="block text-sm font-medium text-[#94A3B8] mb-2">
@@ -629,9 +662,11 @@ const ProductsPage = () => {
                   </div>
 
                   {/* Submit Button */}
-                  <button
+                  <motion.button
                     type="submit"
                     disabled={isSubmitting}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     className="w-full py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
@@ -645,11 +680,16 @@ const ProductsPage = () => {
                         Request Demo
                       </>
                     )}
-                  </button>
-                </form>
+                  </motion.button>
+                </motion.form>
               ) : (
                 // Success Message
-                <div className="p-6 text-center">
+                <motion.div 
+                  className="p-6 text-center"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: "spring", damping: 15 }}
+                >
                   <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 rounded-full flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-green-500" />
                   </div>
@@ -658,9 +698,9 @@ const ProductsPage = () => {
                     Thank you for your interest in {selectedProduct}! Our team will contact you within 24 hours to schedule a demo.
                   </p>
                   <p className="text-xs text-[#6366F1]">
-                    A confirmation email has been sent to {formData.name}
+                    A confirmation email has been sent
                   </p>
-                </div>
+                </motion.div>
               )}
             </motion.div>
           </motion.div>

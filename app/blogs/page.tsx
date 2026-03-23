@@ -2,28 +2,17 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef, useState, useMemo, useCallback, useEffect } from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
   Search,
   X,
   Calendar,
-  User,
   Clock,
-  Tag,
   ArrowRight,
   Sparkles,
   BookOpen,
-  TrendingUp,
-  Code2,
-  Briefcase,
-  Heart,
-  Rocket,
-  MessageCircle,
-  ThumbsUp,
-  Share2,
   ChevronRight
 } from 'lucide-react';
 
@@ -44,11 +33,9 @@ interface Blog {
 
 const BlogsPage = () => {
   const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   // Categories
   const categories = ['All', 'Technology', 'Business', 'Development', 'AI/ML', 'Startup', 'Productivity'];
@@ -295,11 +282,11 @@ const BlogsPage = () => {
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Intro Section */}
+          {/* Intro Section - Direct animation without InView */}
           <motion.div
             variants={introContainerVariants}
             initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
+            animate="visible"
             className="text-center max-w-3xl mx-auto mb-12 lg:mb-16"
           >
             <motion.div 
@@ -351,7 +338,7 @@ const BlogsPage = () => {
           {/* Search and Filter */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
             className="max-w-3xl mx-auto mb-8"
           >
@@ -383,7 +370,7 @@ const BlogsPage = () => {
           {/* Category Filters */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
             className="flex flex-wrap justify-center gap-2 mb-10"
           >
@@ -413,7 +400,7 @@ const BlogsPage = () => {
           {featuredBlogs.length > 0 && selectedCategory === 'All' && !searchQuery && (
             <motion.div
               initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
               className="mb-16"
             >
@@ -487,15 +474,13 @@ const BlogsPage = () => {
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
+              animate="visible"
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
             >
               {(selectedCategory !== 'All' || searchQuery ? filteredBlogs : regularBlogs).map((blog) => (
                 <motion.div
                   key={blog.id}
                   variants={itemVariants}
-                  onHoverStart={() => setHoveredId(blog.id)}
-                  onHoverEnd={() => setHoveredId(null)}
                   className="group relative"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-xl opacity-0 group-hover:opacity-15 transition-opacity duration-500 blur-lg" />

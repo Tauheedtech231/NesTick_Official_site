@@ -295,7 +295,7 @@ const AboutPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="mb-16 lg:mb-20"
+          className="mb-16 mt-[1rem] lg:mb-20"
         >
           <h2 className="text-2xl lg:text-3xl font-bold text-[#F8FAFC] text-center mb-12">
             Our{' '}

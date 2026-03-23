@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
-import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -17,11 +16,6 @@ interface Service {
 
 const Services = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { 
-    once: true, 
-    amount: 0.2,
-    margin: "-50px 0px"
-  });
 
   const services: Service[] = [
     {
@@ -74,54 +68,78 @@ const Services = () => {
     },
   ];
 
-  // Container variants
+  // Animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.08,
+        delayChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 70,
+        damping: 12,
+        mass: 0.5,
+      },
+    },
+  };
+
+  const introContainerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
         delayChildren: 0.1,
       },
     },
   };
 
-  // Item variants
-  const itemVariants: Variants = {
-    hidden: { 
-      y: 15, 
-      opacity: 0,
-      scale: 0.98
-    },
-    visible: {
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 50,
-        damping: 12,
-        mass: 0.5,
-        duration: 0.5
-      },
-    },
-  };
-
-  // Header variants
-  const headerVariants: Variants = {
-    hidden: { 
-      x: -15, 
-      opacity: 0 
-    },
+  const fromLeftVariants: Variants = {
+    hidden: { x: -30, opacity: 0 },
     visible: {
       x: 0,
       opacity: 1,
       transition: {
-        type: 'spring',
-        stiffness: 40,
-        damping: 10,
-        mass: 0.6,
-        duration: 0.6
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
+      },
+    },
+  };
+
+  const fromRightVariants: Variants = {
+    hidden: { x: 30, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
+      },
+    },
+  };
+
+  const fromBottomVariants: Variants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
       },
     },
   };
@@ -133,8 +151,8 @@ const Services = () => {
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#6366F1]/5 rounded-full blur-3xl opacity-40" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#8B5CF6]/5 rounded-full blur-3xl opacity-40" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-72 h-72 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
       </div>
 
       {/* Grid pattern overlay */}
@@ -143,41 +161,55 @@ const Services = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
-          variants={headerVariants}
+          variants={introContainerVariants}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
           className="max-w-3xl mb-8 sm:mb-10 lg:mb-16 text-left"
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full mb-3 sm:mb-4">
-            <span className="text-[#6366F1]">✨</span>
+          <motion.div 
+            variants={fromLeftVariants}
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full mb-3 sm:mb-4"
+          >
+            <span className="text-[#6366F1] animate-pulse">✨</span>
             <span className="text-xs sm:text-sm font-medium text-[#6366F1]">Our Services</span>
-          </div>
+          </motion.div>
           
           {/* Heading */}
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-4 leading-tight">
+          <motion.h2 
+            variants={fromLeftVariants}
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-4 leading-tight"
+          >
             Comprehensive Digital{' '}
-            <span className="text-white">
+            <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
               Solutions
             </span>
-          </h2>
+          </motion.h2>
           
           {/* Description - Updated Subheading */}
-          <p className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-2xl leading-relaxed">
+          <motion.p 
+            variants={fromLeftVariants}
+            className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-2xl leading-relaxed"
+          >
             Complete solutions tailored for your business needs
-          </p>
+          </motion.p>
           
           {/* Decorative line */}
-          <div className="mt-3 sm:mt-5">
+          <motion.div 
+            variants={fromRightVariants}
+            className="mt-3 sm:mt-5"
+          >
             <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-full" />
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* Services Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 auto-rows-fr"
         >
           {services.map((service) => {
@@ -193,18 +225,18 @@ const Services = () => {
                 >
                   {/* Border glow effect */}
                   <div 
-                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-sm"
+                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-15 transition-opacity duration-500 blur-sm"
                     style={{ 
                       background: `linear-gradient(to right, ${service.color}, ${service.color}80)`
                     }}
                   />
                   
                   {/* Main Card */}
-                  <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-4 sm:p-5 lg:p-6 hover:border-[#6366F1]/20 transition-all duration-300 h-full flex flex-col">
+                  <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-4 sm:p-5 lg:p-6 hover:border-transparent transition-all duration-300 hover:shadow-xl hover:shadow-[#6366F1]/5 h-full flex flex-col">
                     
                     {/* Icon Container - Using emoji */}
                     <div className="relative mb-3 sm:mb-4 flex-shrink-0">
-                      <div className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center transform group-hover:scale-105 group-hover:rotate-2 transition-all duration-300`}>
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-300`}>
                         <span className="text-xl sm:text-2xl lg:text-3xl">
                           {service.icon}
                         </span>
@@ -212,7 +244,7 @@ const Services = () => {
                       
                       {/* Glow effect behind icon */}
                       <div 
-                        className="absolute -inset-2 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-md"
+                        className="absolute -inset-2 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-md"
                         style={{ background: `linear-gradient(to right, ${service.color}, ${service.color}40)` }}
                       />
                     </div>
@@ -235,7 +267,7 @@ const Services = () => {
                     {/* Corner Accent */}
                     <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden">
                       <div 
-                        className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-500 transform rotate-12 translate-x-6 -translate-y-6"
+                        className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-br opacity-0 group-hover:opacity-15 transition-opacity duration-500 transform rotate-12 translate-x-6 -translate-y-6"
                         style={{ 
                           background: `linear-gradient(to bottom right, ${service.color}, ${service.color}80)`
                         }}
@@ -250,19 +282,21 @@ const Services = () => {
 
         {/* CTA for more services */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
+          variants={fromBottomVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.5 }}
           className="mt-10 sm:mt-12 text-center"
         >
           <Link href="/services">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 text-sm sm:text-base"
             >
               View All Services
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </motion.button>
           </Link>
         </motion.div>

@@ -329,20 +329,7 @@ const WhyChooseUs = () => {
           })}
         </motion.div>
 
-        {/* Bottom CTA - Simple */}
-        <motion.div
-          initial={{ y: 15, opacity: 0 }}
-          animate={isInView ? { y: 0, opacity: 1 } : {}}
-          transition={{ delay: 0.6, duration: 0.4 }}
-          className="text-center mt-12 lg:mt-16"
-        >
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity duration-200"
-          >
-            <span>Ready to start your project?</span>
-          </Link>
-        </motion.div>
+      
       </div>
     </section>
   );

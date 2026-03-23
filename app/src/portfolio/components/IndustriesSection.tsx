@@ -23,6 +23,7 @@ import {
   Briefcase,
   LucideIcon
 } from 'lucide-react';
+import Link from 'next/link';
 
 interface Industry {
   id: number;
@@ -178,7 +179,8 @@ const IndustriesSection = () => {
     };
   }, [isModalOpen]);
 
-  const containerVariants :Variants = {
+  // Animation variants
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -189,13 +191,51 @@ const IndustriesSection = () => {
     },
   };
 
-  const itemVariants :Variants = {
+  const itemVariants: Variants = {
     hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: 'spring',
+        stiffness: 70,
+        damping: 12,
+        mass: 0.5,
+      },
+    },
+  };
+
+  const introContainerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const fromTopVariants: Variants = {
+    hidden: { y: -30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
+      },
+    },
+  };
+
+  const fromBottomVariants: Variants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
         stiffness: 50,
         damping: 12,
       },
@@ -207,8 +247,8 @@ const IndustriesSection = () => {
       <section className="relative py-20 lg:py-28 bg-[#020617] overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#6366F1]/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#8B5CF6]/10 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-72 h-72 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
         </div>
 
         {/* Grid pattern overlay */}
@@ -217,26 +257,36 @@ const IndustriesSection = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
+            variants={introContainerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
             className="text-center max-w-3xl mx-auto mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-[#0F172A] border border-[#1E293B]">
+            <motion.div 
+              variants={fromTopVariants}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-[#0F172A] border border-[#1E293B]"
+            >
               <Sparkles className="w-4 h-4 text-[#6366F1]" />
-              <span className="text-xs lg:text-sm font-medium text-[#94A3B8]">
+              <span className="text-xs lg:text-sm font-medium bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
                 Industries We Serve
               </span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#F8FAFC] mb-3">
+            </motion.div>
+            <motion.h2 
+              variants={fromTopVariants}
+              className="text-3xl md:text-4xl lg:text-4xl font-bold text-[#F8FAFC] mb-3"
+            >
               Trusted by{' '}
               <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
                 Leading Industries
               </span>
-            </h2>
-            <p className="text-base md:text-lg text-[#94A3B8]">
+            </motion.h2>
+            <motion.p 
+              variants={fromTopVariants}
+              className="text-base md:text-lg text-[#94A3B8]"
+            >
               Specialized digital solutions tailored for your industry&apos;s unique challenges
-            </p>
+            </motion.p>
           </motion.div>
 
           {/* Industries Grid */}
@@ -256,11 +306,11 @@ const IndustriesSection = () => {
                   whileHover={{ y: -4 }}
                   className="group relative"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-r ${industry.gradient} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-sm`} />
+                  <div className={`absolute inset-0 bg-gradient-to-r ${industry.gradient} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-sm`} />
                   
-                  <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#6366F1]/30 transition-all duration-300 h-full">
+                  <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#6366F1]/30 transition-all duration-300 h-full hover:-translate-y-1">
                     {/* Icon */}
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${industry.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:scale-105 transition-transform duration-300`}>
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${industry.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                       <Icon className="w-6 h-6 text-white" />
                     </div>
 
@@ -281,223 +331,36 @@ const IndustriesSection = () => {
 
           {/* Bottom CTA */}
           <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
             className="text-center mt-12 pt-8 border-t border-[#1E293B]"
           >
-            <p className="text-[#94A3B8] mb-4">
-              Ready to transform your business with cutting-edge digital solutions?
-            </p>
-            <button
-              onClick={handleConsultancyClick}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 hover:scale-105"
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-[#94A3B8] mb-4"
             >
-              Get Free Consultancy
-              <Sparkles className="w-4 h-4" />
-            </button>
+              Ready to transform your business with cutting-edge digital solutions?
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+            >
+              <Link
+                href="/consultation"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 hover:scale-105 group"
+              >
+                <span>Get Free Consultation</span>
+                <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
-
-      {/* Consultation Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-          >
-            <motion.div
-              ref={modalRef}
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative w-full max-w-2xl bg-[#0F172A] border border-[#1E293B] rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
-            >
-              {/* Modal Header */}
-              <div className="sticky top-0 bg-[#0F172A] border-b border-[#1E293B] px-4 sm:px-6 py-4 flex items-center justify-between z-10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-bold text-white">
-                      Free Consultation
-                    </h3>
-                    <p className="text-xs text-[#94A3B8]">
-                      Let&apos;s discuss your business needs
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="p-1 text-[#94A3B8] hover:text-white transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Form */}
-              {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
-                  {/* Full Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Full Name *
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
-                      <input
-                        type="text"
-                        name="fullName"
-                        required
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Email Address *
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                        placeholder="Enter your email"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Phone */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Phone Number *
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                        placeholder="Enter your phone number"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Company Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Company Name *
-                    </label>
-                    <div className="relative">
-                      <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
-                      <input
-                        type="text"
-                        name="companyName"
-                        required
-                        value={formData.companyName}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                        placeholder="Enter your company name"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Industry */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Industry *
-                    </label>
-                    <div className="relative">
-                      <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
-                      <select
-                        name="industry"
-                        required
-                        value={formData.industry}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors appearance-none"
-                      >
-                        <option value="">Select your industry</option>
-                        {industries.map((industry) => (
-                          <option key={industry.id} value={industry.name}>
-                            {industry.name}
-                          </option>
-                        ))}
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Project Description */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Project Description / Requirements *
-                    </label>
-                    <textarea
-                      name="projectDescription"
-                      required
-                      rows={4}
-                      value={formData.projectDescription}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors resize-none"
-                      placeholder="Tell us about your project requirements..."
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Submitting...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        Request Free Consultation
-                      </>
-                    )}
-                  </button>
-                </form>
-              ) : (
-                // Success Message
-                <div className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-8 h-8 text-green-500" />
-                  </div>
-                  <h4 className="text-xl font-bold text-white mb-2">Request Submitted!</h4>
-                  <p className="text-[#94A3B8] mb-4">
-                    Thank you for reaching out! Our team will contact you within 24 hours to discuss your requirements.
-                  </p>
-                  <p className="text-xs text-[#6366F1]">
-                    A confirmation email has been sent to {formData.email}
-                  </p>
-                </div>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 };

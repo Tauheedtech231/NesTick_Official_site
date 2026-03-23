@@ -201,29 +201,10 @@ const TechStackPage = () => {
           </div>
         </div>
 
-        {/* Grid View */}
-        <div className="mt-12 lg:mt-16 w-full">
-          <h3 className="text-lg font-semibold text-[#F8FAFC] text-center mb-6">All Technologies</h3>
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
-            {filteredTech.map(tech => (
-              <button key={tech.id} onClick={() => setSelected(tech)}
-                className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-4 flex flex-col items-center gap-2 hover:border-[#6366F1] transition-all duration-300 group hover:-translate-y-1">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tech.gradient} p-2`}>
-                  <div className="w-full h-full text-white">
-                    {tech.icon}
-                  </div>
-                </div>
-                <span className="text-xs font-medium text-[#F8FAFC]">{tech.name}</span>
-                <span className="text-[10px] text-[#94A3B8]">{tech.category}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+      
 
         {/* Results Count */}
-        <p className="text-center text-sm text-[#94A3B8] mt-8">
-          Showing {filteredTech.length} technologies
-        </p>
+       
       </div>
 
       {/* Modal */}

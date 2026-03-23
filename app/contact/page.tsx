@@ -1,7 +1,7 @@
 // app/contact/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,7 +21,12 @@ import {
   Sparkles,
   MessageSquare,
   Users,
-  Globe
+  Globe,
+  ArrowRight,
+  Calendar,
+  Star,
+  Shield,
+  Building2
 } from 'lucide-react';
 
 const ContactPage = () => {
@@ -35,6 +40,7 @@ const ContactPage = () => {
 
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const sectionRef = useRef(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -70,28 +76,32 @@ const ContactPage = () => {
       label: 'Email Us',
       value: 'nesticktech@gmail.com',
       href: 'mailto:nesticktech@gmail.com',
-      color: 'from-[#6366F1] to-[#8B5CF6]',
+      gradient: 'from-[#6366F1] to-[#8B5CF6]',
+      description: 'We\'ll respond within 24 hours',
     },
     {
       icon: Phone,
       label: 'Call Us',
       value: '+92 (300) 123-4567',
       href: 'tel:+923001234567',
-      color: 'from-[#22C55E] to-[#86EFAC]',
+      gradient: 'from-[#22C55E] to-[#86EFAC]',
+      description: 'Mon-Fri: 9AM - 6PM PKT',
     },
     {
       icon: MapPin,
       label: 'Visit Us',
-      value: 'Johar Town, Lahore, Pakistan',
+      value: 'Johar Town, Lahore',
       href: 'https://maps.google.com/?q=Johar+Town+Lahore',
-      color: 'from-[#F59E0B] to-[#FBBF24]',
+      gradient: 'from-[#F59E0B] to-[#FBBF24]',
+      description: 'Pakistan',
     },
     {
       icon: Clock,
       label: 'Working Hours',
-      value: 'Mon-Fri: 9AM - 6PM PKT',
+      value: '9AM - 6PM PKT',
       href: '#',
-      color: 'from-[#EF4444] to-[#F87171]',
+      gradient: 'from-[#EF4444] to-[#F87171]',
+      description: 'Monday - Friday',
     },
   ];
 
@@ -100,113 +110,166 @@ const ContactPage = () => {
       name: 'Abdullah Amin',
       role: 'Senior Business Analyst',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1887&auto=format&fit=crop',
-      color: 'from-[#6366F1] to-[#8B5CF6]',
+      gradient: 'from-[#6366F1] to-[#8B5CF6]',
+      expertise: '10+ years experience',
     },
     {
       name: 'Haris Ashar',
       role: 'Business Developer',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop',
-      color: 'from-[#22C55E] to-[#86EFAC]',
+      gradient: 'from-[#22C55E] to-[#86EFAC]',
+      expertise: 'Strategic planning',
     },
     {
       name: 'Tauheed',
       role: 'Web Developer',
       image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop',
-      color: 'from-[#F59E0B] to-[#FBBF24]',
+      gradient: 'from-[#F59E0B] to-[#FBBF24]',
+      expertise: 'Full-stack expert',
     },
   ];
 
-
+  const features = [
+    { icon: Star, text: 'Fast Response Time', color: '#6366F1' },
+    { icon: Shield, text: '100% Confidential', color: '#22C55E' },
+    { icon: Calendar, text: 'Free Consultation', color: '#F59E0B' },
+    { icon: Building2, text: 'Enterprise Ready', color: '#EF4444' },
+  ];
 
   // Animation variants
-  const containerVariants:Variants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
+        staggerChildren: 0.08,
+        delayChildren: 0.15,
       },
     },
   };
 
-  const itemVariants:Variants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: 'spring',
-        stiffness: 50,
-        damping: 10,
-        mass: 0.5,
+        stiffness: 70,
+        damping: 12,
       },
     },
   };
 
-  const headerVariants:Variants = {
-    hidden: { y: -20, opacity: 0 },
+  const introContainerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const fromTopVariants: Variants = {
+    hidden: { y: -30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        type: 'spring',
-        stiffness: 40,
-        damping: 8,
-        mass: 0.6,
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
+      },
+    },
+  };
+
+  const fromBottomVariants: Variants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
+      },
+    },
+  };
+
+  const fromLeftVariants: Variants = {
+    hidden: { x: -30, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
+      },
+    },
+  };
+
+  const fromRightVariants: Variants = {
+    hidden: { x: 30, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
       },
     },
   };
 
   return (
-    <main className="min-h-screen bg-[#020617] pt-20 lg:pt-24 overflow-hidden relative">
-      {/* Background Image with Overlay */}
-      <div className="fixed inset-0 z-0">
-        <Image
-          src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop"
-          alt="Office Background"
-          fill
-          className="object-cover opacity-20"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-[#020617]/95 to-[#020617]" />
+    <main className="min-h-screen bg-[#020617] pt-20 lg:pt-24 overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="fixed inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-72 h-72 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#22C55E]/5 rounded-full blur-3xl" />
       </div>
 
-      {/* Background Elements */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-[#6366F1]/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#22C55E]/5 rounded-full blur-3xl" />
-      </div>
+      {/* Grid pattern overlay */}
+      <div className="fixed inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
 
-      {/* Grid Pattern Overlay */}
-      <div className="fixed inset-0 bg-[url('/grid-pattern.svg')] opacity-5 z-0" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        {/* Header */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        {/* Header Section */}
         <motion.div
-          variants={headerVariants}
+          variants={introContainerVariants}
           initial="hidden"
           animate="visible"
           className="text-center max-w-3xl mx-auto mb-12 lg:mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-[#0F172A]/80 backdrop-blur-sm border border-[#1E293B]">
-            <MessageSquare className="w-4 h-4 text-[#6366F1]" />
-            <span className="text-xs lg:text-sm font-medium text-[#94A3B8]">
+          <motion.div 
+            variants={fromTopVariants}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A] border border-[#1E293B] mb-4"
+          >
+            <Sparkles className="w-4 h-4 text-[#6366F1]" />
+            <span className="text-sm font-medium bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
               Get in Touch
             </span>
-          </div>
+          </motion.div>
           
-          <h1 className="text-4xl sm:text-3xl lg:text-5xl xl:text-7xl font-bold text-[#F8FAFC] mb-4">
+          <motion.h1 
+            variants={fromTopVariants}
+            className="text-4xl md:text-5xl lg:text-5xl font-bold text-[#F8FAFC] mb-4"
+          >
             Contact{' '}
             <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
               Us
             </span>
-          </h1>
+          </motion.h1>
           
-          <p className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-2xl mx-auto">
+          <motion.p 
+            variants={fromTopVariants}
+            className="text-base lg:text-lg text-[#94A3B8] max-w-2xl mx-auto leading-relaxed"
+          >
             Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* Contact Info Cards */}
@@ -214,7 +277,7 @@ const ContactPage = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 lg:mb-16"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12 lg:mb-16"
         >
           {contactInfo.map((info, index) => {
             const Icon = info.icon;
@@ -225,16 +288,17 @@ const ContactPage = () => {
                 whileHover={{ y: -4 }}
                 className="group relative"
               >
-                <div className={`absolute inset-0 bg-gradient-to-r ${info.color} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-sm`} />
+                <div className={`absolute inset-0 bg-gradient-to-r ${info.gradient} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-sm`} />
                 <Link
                   href={info.href}
-                  className="relative block bg-[#0F172A]/80 backdrop-blur-sm border border-[#1E293B] rounded-xl p-5 hover:border-[#6366F1]/30 transition-all duration-300"
+                  className="relative block bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#6366F1]/30 transition-all duration-300"
                 >
-                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${info.color} p-2.5 mb-3`}>
-                    <Icon className="w-full h-full text-white" />
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${info.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-sm font-medium text-[#94A3B8] mb-1">{info.label}</h3>
-                  <p className="text-sm lg:text-base text-[#F8FAFC] font-medium">{info.value}</p>
+                  <p className="text-base lg:text-lg text-[#F8FAFC] font-semibold mb-1">{info.value}</p>
+                  <p className="text-xs text-[#94A3B8]">{info.description}</p>
                 </Link>
               </motion.div>
             );
@@ -242,90 +306,90 @@ const ContactPage = () => {
         </motion.div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Contact Form */}
           <motion.div
-            variants={containerVariants}
+            variants={fromLeftVariants}
             initial="hidden"
             animate="visible"
-            className="lg:col-span-2"
+            className="relative"
           >
-            <motion.div variants={itemVariants} className="bg-[#0F172A]/80 backdrop-blur-sm border border-[#1E293B] rounded-2xl p-6 lg:p-8">
-              <h2 className="text-xl lg:text-2xl font-bold text-[#F8FAFC] mb-6">Send us a Message</h2>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-2xl blur-xl opacity-20" />
+            <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 lg:p-8">
+              <h2 className="text-2xl font-bold text-[#F8FAFC] mb-2">Send us a Message</h2>
+              <p className="text-sm text-[#94A3B8] mb-6">Fill out the form below and we&apos;ll get back to you shortly.</p>
               
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Name & Email Row */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-[#020617]/80 border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
-                      placeholder="John Doe"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-[#020617]/80 border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
-                      placeholder="john@example.com"
-                    />
-                  </div>
+                {/* Name */}
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
+                    placeholder="Enter your full name"
+                  />
                 </div>
 
-                {/* Phone & Subject Row */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-[#020617]/80 border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
-                      placeholder="+92 300 1234567"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Subject *
-                    </label>
-                    <select
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-[#020617]/80 border border-[#1E293B] rounded-lg text-[#F8FAFC] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
-                    >
-                      <option value="">Select a subject</option>
-                      <option value="General Inquiry">General Inquiry</option>
-                      <option value="Project Discussion">Project Discussion</option>
-                      <option value="Support">Support</option>
-                      <option value="Partnership">Partnership</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
+                {/* Email */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                {/* Subject */}
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Subject *
+                  </label>
+                  <select
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-[#F8FAFC] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300"
+                  >
+                    <option value="">Select a subject</option>
+                    <option value="General Inquiry">General Inquiry</option>
+                    <option value="Project Discussion">Project Discussion</option>
+                    <option value="Support">Support</option>
+                    <option value="Partnership">Partnership</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
 
                 {/* Message */}
@@ -340,31 +404,31 @@ const ContactPage = () => {
                     onChange={handleChange}
                     required
                     rows={5}
-                    className="w-full px-4 py-3 bg-[#020617]/80 border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300 resize-none"
-                    placeholder="Tell us about your project..."
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]/20 transition-all duration-300 resize-none"
+                    placeholder="Tell us about your project or inquiry..."
                   />
                 </div>
 
                 {/* Submit Button */}
-                <div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        Send Message
-                        <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </>
-                    )}
-                  </button>
-                </div>
+                <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </motion.button>
 
                 {/* Form Status Messages */}
                 {formStatus === 'success' && (
@@ -389,28 +453,46 @@ const ContactPage = () => {
                   </motion.div>
                 )}
               </form>
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Sidebar */}
+          {/* Right Column - Info & Team */}
           <motion.div
-            variants={containerVariants}
+            variants={fromRightVariants}
             initial="hidden"
             animate="visible"
             className="space-y-6"
           >
-            {/* Meet the Team - With Images */}
-            <motion.div variants={itemVariants} className="bg-[#0F172A]/80 backdrop-blur-sm border border-[#1E293B] rounded-2xl p-6">
+            {/* Features Grid */}
+            <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
+              <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4">Why Contact Us?</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {features.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <div key={index} className="flex items-center gap-2 p-2 rounded-lg bg-[#020617] border border-[#1E293B]">
+                      <div className={`w-8 h-8 rounded-lg bg-[${feature.color}]/10 flex items-center justify-center`}>
+                        <Icon className="w-4 h-4 text-[#6366F1]" />
+                      </div>
+                      <span className="text-xs text-[#F8FAFC]">{feature.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Meet the Team */}
+            <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Users className="w-5 h-5 text-[#6366F1]" />
-                <h3 className="text-lg font-semibold text-[#F8FAFC]">Our Team</h3>
+                <h3 className="text-lg font-semibold text-[#F8FAFC]">Meet Our Experts</h3>
               </div>
               
               <div className="space-y-4">
                 {teamMembers.map((member, index) => (
-                  <div key={index} className="flex items-center gap-3 group">
+                  <div key={index} className="flex items-center gap-3 group hover:bg-[#020617] p-2 rounded-lg transition-all duration-300">
                     <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#6366F1] transition-all duration-300">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-20`} />
+                      <div className={`absolute inset-0 bg-gradient-to-br ${member.gradient} opacity-20`} />
                       <Image
                         src={member.image}
                         alt={member.name}
@@ -424,48 +506,47 @@ const ContactPage = () => {
                         {member.name}
                       </p>
                       <p className="text-xs text-[#94A3B8]">{member.role}</p>
+                      <p className="text-xs text-[#6366F1] mt-0.5">{member.expertise}</p>
                     </div>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
-            {/* Location - Johar Town, Lahore */}
-            <motion.div variants={itemVariants} className="bg-[#0F172A]/80 backdrop-blur-sm border border-[#1E293B] rounded-2xl p-6">
+            {/* Location Map */}
+            <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 overflow-hidden">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="w-5 h-5 text-[#6366F1]" />
                 <h3 className="text-lg font-semibold text-[#F8FAFC]">Our Location</h3>
               </div>
               
-              <div className="space-y-3">
-                <p className="text-sm text-[#F8FAFC] font-medium">Johar Town, Lahore</p>
-                <p className="text-xs text-[#94A3B8] leading-relaxed">
-                  We&apos;re located in the heart of Johar Town, Lahore. Easy access from main boulevard and nearby commercial areas.
-                </p>
-                
-                {/* Location Image */}
-                <div className="relative w-full h-32 rounded-lg overflow-hidden mt-3 group">
-                  <Image
-                    src="https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=2070&auto=format&fit=crop"
-                    alt="Johar Town Lahore"
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#020617] to-transparent" />
-                  <Link 
-                    href="https://maps.google.com/?q=Johar+Town+Lahore" 
-                    target="_blank"
-                    className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-[#0F172A]/90 backdrop-blur-sm border border-[#1E293B] px-3 py-1.5 rounded-lg text-xs text-[#94A3B8] hover:text-[#6366F1] hover:border-[#6366F1] transition-all duration-300 flex items-center gap-1"
-                  >
-                    <MapPin className="w-3 h-3" />
-                    View on Maps
-                  </Link>
-                </div>
+              <div className="relative w-full h-48 rounded-lg overflow-hidden mb-3 group">
+                <Image
+                  src="https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=2070&auto=format&fit=crop"
+                  alt="Johar Town Lahore"
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] to-transparent" />
               </div>
-            </motion.div>
+              
+              <p className="text-sm text-[#F8FAFC] font-medium mb-1">Johar Town, Lahore</p>
+              <p className="text-xs text-[#94A3B8] leading-relaxed mb-3">
+                Located in the heart of Johar Town, easy access from main boulevard.
+              </p>
+              
+              <Link 
+                href="https://maps.google.com/?q=Johar+Town+Lahore" 
+                target="_blank"
+                className="inline-flex items-center gap-2 text-sm text-[#6366F1] hover:gap-3 transition-all duration-300 group"
+              >
+                <span>View on Maps</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
 
-       
-         
+        
+            
           </motion.div>
         </div>
       </div>

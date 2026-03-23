@@ -238,13 +238,7 @@ const FAQ = () => {
                 Call Us
               </Link>
               
-              <Link
-                href="/live-chat"
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0F172A] border border-[#1E293B] text-white font-medium rounded-lg hover:border-[#6366F1] hover:bg-[#6366F1]/5 transition-all duration-200 text-xs sm:text-sm"
-              >
-                <MessageCircle className="w-3.5 h-3.5" />
-                Live Chat
-              </Link>
+              
             </div>
           </div>
         </motion.div>

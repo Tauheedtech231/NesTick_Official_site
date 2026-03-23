@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence, Variants, useReducedMotion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
 import {
@@ -67,6 +67,7 @@ interface FormData {
 }
 
 const ServicesPage = () => {
+  const sectionRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
@@ -76,7 +77,6 @@ const ServicesPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
 
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
@@ -482,7 +482,7 @@ const ServicesPage = () => {
 
   // Simulate loading
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 400); // Reduced from 600ms for faster loading
+    const timer = setTimeout(() => setIsLoading(false), 400);
     return () => clearTimeout(timer);
   }, []);
 
@@ -493,106 +493,65 @@ const ServicesPage = () => {
     }
   }, []);
 
-  // Optimized animation variants with reduced motion support
+  // Animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: prefersReducedMotion ? 0 : 0.06,
-        delayChildren: prefersReducedMotion ? 0 : 0.1,
+        staggerChildren: 0.08,
+        delayChildren: 0.15,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { y: prefersReducedMotion ? 0 : 30, opacity: 0 },
+    hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        type: prefersReducedMotion ? "tween" : "spring",
-        stiffness: prefersReducedMotion ? 0 : 100,
-        damping: prefersReducedMotion ? 0 : 15,
-        mass: prefersReducedMotion ? 0 : 0.3,
-        duration: prefersReducedMotion ? 0.3 : undefined,
+        type: 'spring',
+        stiffness: 70,
+        damping: 12,
+        mass: 0.5,
       },
     },
   };
 
-  // Hero section animations
-  const heroVariants: Variants = {
+  const introContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
+        staggerChildren: 0.15,
         delayChildren: 0.1,
       },
     },
   };
 
-  const badgeVariants: Variants = {
-    hidden: { scale: 0.9, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        type: prefersReducedMotion ? "tween" : "spring",
-        stiffness: prefersReducedMotion ? 0 : 200,
-        damping: prefersReducedMotion ? 0 : 15,
-        duration: prefersReducedMotion ? 0.2 : undefined,
-      },
-    },
-  };
-
-  const headingVariants: Variants = {
-    hidden: { y: prefersReducedMotion ? 0 : -20, opacity: 0 },
+  const fromTopVariants: Variants = {
+    hidden: { y: -30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: prefersReducedMotion ? 0.3 : 0.5,
-        ease: "easeOut",
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
       },
     },
   };
 
-  const descriptionVariants: Variants = {
-    hidden: { y: prefersReducedMotion ? 0 : 20, opacity: 0 },
+  const fromBottomVariants: Variants = {
+    hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: prefersReducedMotion ? 0.3 : 0.5,
-        delay: prefersReducedMotion ? 0 : 0.1,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const searchVariants: Variants = {
-    hidden: { y: prefersReducedMotion ? 0 : 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: prefersReducedMotion ? 0.3 : 0.5,
-        delay: prefersReducedMotion ? 0 : 0.15,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const filtersVariants: Variants = {
-    hidden: { y: prefersReducedMotion ? 0 : 15, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: prefersReducedMotion ? 0.3 : 0.5,
-        delay: prefersReducedMotion ? 0 : 0.2,
-        ease: "easeOut",
+        type: "spring",
+        stiffness: 50,
+        damping: 12,
       },
     },
   };
@@ -613,49 +572,59 @@ const ServicesPage = () => {
   return (
     <>
       <main className="min-h-screen bg-[#020617] pt-20 lg:pt-24">
-        {/* Hero Section */}
+        {/* Hero Section with Smooth Animations */}
         <section className="relative overflow-hidden border-b border-[#1E293B]">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#6366F1]/5 via-transparent to-[#8B5CF6]/5" />
-          <div className="absolute top-20 left-10 w-64 h-64 bg-[#6366F1]/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
-          <div className="absolute bottom-20 right-10 w-64 h-64 bg-[#8B5CF6]/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
+          {/* Background decorative elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-10 w-72 h-72 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
+          </div>
+
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
           
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            {/* Animated Intro Section */}
             <motion.div
-              variants={heroVariants}
+              variants={introContainerVariants}
               initial="hidden"
               animate="visible"
               className="text-center max-w-3xl mx-auto"
             >
               {/* Badge */}
-              <motion.div variants={badgeVariants} className="inline-flex items-center gap-2 px-4 py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full mb-4">
+              <motion.div 
+                variants={fromTopVariants}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A] border border-[#1E293B] mb-4"
+              >
                 <Sparkles className="w-4 h-4 text-[#6366F1]" />
-                <span className="text-sm font-medium text-[#6366F1]">Our Services</span>
+                <span className="text-sm font-medium bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
+                  Our Services
+                </span>
               </motion.div>
 
               {/* Heading */}
               <motion.h1 
-                variants={headingVariants}
+                variants={fromTopVariants}
                 className="text-4xl md:text-5xl lg:text-5xl font-bold mb-4"
               >
                 <span className="text-[#F8FAFC]">Digital </span>
                 <span className="bg-gradient-to-r from-[#6366F1] via-[#8B5CF6] to-[#A855F7] bg-clip-text text-transparent animate-gradient">
                   Solutions
                 </span>
-                <span className="text-[#F8FAFC]"> For  Modern Business </span>
-                
+                <span className="text-[#F8FAFC]"> For Modern Business </span>
               </motion.h1>
 
               {/* Description */}
               <motion.p 
-                variants={descriptionVariants}
-                className="text-lg text-[#94A3B8] mb-8 max-w-2xl mx-auto"
+                variants={fromTopVariants}
+                className="text-base text-[#94A3B8] leading-relaxed max-w-2xl mx-auto mb-8"
               >
                 Transform your business with cutting-edge technology solutions tailored to your unique needs
               </motion.p>
 
               {/* Search Bar */}
               <motion.div 
-                variants={searchVariants}
+                variants={fromBottomVariants}
                 className="max-w-2xl mx-auto relative"
               >
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#94A3B8]" />
@@ -679,7 +648,7 @@ const ServicesPage = () => {
 
               {/* Category Filters */}
               <motion.div 
-                variants={filtersVariants}
+                variants={fromBottomVariants}
                 className="flex flex-wrap justify-center gap-2 mt-6"
               >
                 {categories.map((category) => (
@@ -699,9 +668,7 @@ const ServicesPage = () => {
 
               {/* Results count */}
               <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
+                variants={fromBottomVariants}
                 className="text-sm text-[#94A3B8] mt-6"
               >
                 Showing {filteredServices.length} of {allServices.length} services
@@ -710,129 +677,124 @@ const ServicesPage = () => {
           </div>
         </section>
 
-        {/* Services Grid */}
+        {/* Services Grid with Stagger Animation */}
         <section className="py-16 lg:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AnimatePresence mode="wait">
-              {filteredServices.length > 0 ? (
-                <motion.div
-                  key="services"
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.1, margin: "-50px" }}
-                  exit={{ opacity: 0 }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
-                >
-                  {filteredServices.map((service) => {
-                    const Icon = service.icon;
-                    
-                    return (
-                      <motion.div
-                        key={service.id}
-                        variants={itemVariants}
-                        layout={!prefersReducedMotion}
-                        whileHover={prefersReducedMotion ? {} : { y: -4 }}
-                        className="group relative"
-                      >
-                        {/* Card Border Glow */}
-                        <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} rounded-xl opacity-0 group-hover:opacity-15 transition-opacity duration-500 blur-sm`} />
-                        
-                        {/* Card */}
-                        <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#6366F1]/30 transition-all duration-300 h-full flex flex-col">
-                          {/* Header */}
-                          <div className="flex items-start justify-between mb-4">
-                            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center flex-shrink-0 shadow-lg`}>
-                              <Icon className="w-6 h-6 text-white" />
-                            </div>
-                            <span className="text-xs px-2 py-1 bg-[#1E293B] text-[#94A3B8] rounded-lg border border-transparent group-hover:border-[#6366F1]/30 transition-colors duration-300">
-                              {service.category}
-                            </span>
+            {filteredServices.length > 0 ? (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
+              >
+                {filteredServices.map((service) => {
+                  const Icon = service.icon;
+                  
+                  return (
+                    <motion.div
+                      key={service.id}
+                      variants={itemVariants}
+                      className="group relative"
+                    >
+                      {/* Card Border Glow */}
+                      <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} rounded-xl opacity-0 group-hover:opacity-15 transition-opacity duration-500 blur-sm`} />
+                      
+                      {/* Card */}
+                      <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#6366F1]/30 transition-all duration-300 hover:shadow-xl hover:shadow-[#6366F1]/5 h-full flex flex-col hover:-translate-y-1">
+                        {/* Header */}
+                        <div className="flex items-start justify-between mb-4">
+                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center flex-shrink-0 shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+                            <Icon className="w-6 h-6 text-white" />
                           </div>
-
-                          {/* Content */}
-                          <h3 className="text-lg font-bold text-[#F8FAFC] mb-2 group-hover:text-[#6366F1] transition-colors duration-300">
-                            {service.title}
-                          </h3>
-                          <p className="text-sm text-[#94A3B8] mb-4 line-clamp-2">
-                            {service.longDescription}
-                          </p>
-
-                          {/* Technologies */}
-                          <div className="mt-auto">
-                            <div className="flex flex-wrap gap-1.5 mb-4">
-                              {service.technologies.slice(0, 3).map((tech) => (
-                                <span
-                                  key={tech}
-                                  className="text-xs px-2 py-1 bg-[#1E293B] text-[#94A3B8] rounded-lg"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                              {service.technologies.length > 3 && (
-                                <span className="text-xs px-2 py-1 bg-[#1E293B] text-[#94A3B8] rounded-lg">
-                                  +{service.technologies.length - 3}
-                                </span>
-                              )}
-                            </div>
-                            
-                            {/* Learn More Button */}
-                            <button
-                              onClick={() => handleServiceClick(service.title)}
-                              className="inline-flex items-center gap-2 text-sm font-medium text-[#6366F1] hover:gap-3 transition-all duration-300 group/btn"
-                            >
-                              Learn More
-                              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                            </button>
-                          </div>
-
-                          {/* Corner Accent */}
-                          <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden">
-                            <div className={`absolute top-0 right-0 w-12 h-12 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-500 transform rotate-12 translate-x-6 -translate-y-6`} />
-                          </div>
+                          <span className="text-xs px-2 py-1 bg-[#1E293B] text-[#94A3B8] rounded-lg border border-transparent group-hover:border-[#6366F1]/30 transition-colors duration-300">
+                            {service.category}
+                          </span>
                         </div>
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="no-results"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center py-20"
+
+                        {/* Content */}
+                        <h3 className="text-lg font-bold text-[#F8FAFC] mb-2 group-hover:text-[#6366F1] transition-colors duration-300">
+                          {service.title}
+                        </h3>
+                        <p className="text-sm text-[#94A3B8] mb-4 line-clamp-2">
+                          {service.longDescription}
+                        </p>
+
+                        {/* Technologies */}
+                        <div className="mt-auto">
+                          <div className="flex flex-wrap gap-1.5 mb-4">
+                            {service.technologies.slice(0, 3).map((tech) => (
+                              <span
+                                key={tech}
+                                className="text-xs px-2 py-1 bg-[#1E293B] text-[#94A3B8] rounded-lg transition-all duration-300 group-hover:bg-[#6366F1]/10 group-hover:text-[#6366F1]"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                            {service.technologies.length > 3 && (
+                              <span className="text-xs px-2 py-1 bg-[#1E293B] text-[#94A3B8] rounded-lg transition-all duration-300 group-hover:bg-[#6366F1]/10 group-hover:text-[#6366F1]">
+                                +{service.technologies.length - 3}
+                              </span>
+                            )}
+                          </div>
+                          
+                          {/* Learn More Button */}
+                          <button
+                            onClick={() => handleServiceClick(service.title)}
+                            className="inline-flex items-center gap-2 text-sm font-medium text-[#6366F1] hover:gap-3 transition-all duration-300 group/btn"
+                          >
+                            Learn More
+                            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                          </button>
+                        </div>
+
+                        {/* Corner Accent */}
+                        <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden">
+                          <div className={`absolute top-0 right-0 w-12 h-12 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-500 transform rotate-12 translate-x-6 -translate-y-6`} />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20"
+              >
+                <div className="w-20 h-20 mx-auto mb-4 bg-[#0F172A] rounded-full flex items-center justify-center border border-[#1E293B]">
+                  <Search className="w-8 h-8 text-[#94A3B8]" />
+                </div>
+                <h3 className="text-xl font-bold text-[#F8FAFC] mb-2">No services found</h3>
+                <p className="text-[#94A3B8] mb-6">
+                  Try adjusting your search or filter to find what you&apos;re looking for.
+                </p>
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('All');
+                  }}
+                  className="px-6 py-3 bg-[#6366F1] text-white rounded-xl hover:bg-[#8B5CF6] transition-all duration-300 hover:shadow-lg hover:shadow-[#6366F1]/25 hover:-translate-y-0.5"
                 >
-                  <div className="w-20 h-20 mx-auto mb-4 bg-[#0F172A] rounded-full flex items-center justify-center border border-[#1E293B]">
-                    <Search className="w-8 h-8 text-[#94A3B8]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-[#F8FAFC] mb-2">No services found</h3>
-                  <p className="text-[#94A3B8] mb-6">
-                    Try adjusting your search or filter to find what you&apos;re looking for.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setSearchQuery('');
-                      setSelectedCategory('All');
-                    }}
-                    className="px-6 py-3 bg-[#6366F1] text-white rounded-xl hover:bg-[#8B5CF6] transition-all duration-300 hover:shadow-lg hover:shadow-[#6366F1]/25"
-                  >
-                    Clear Filters
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  Clear Filters
+                </button>
+              </motion.div>
+            )}
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="border-t border-[#1E293B] py-16 lg:py-20">
+        {/* CTA Section with Animation */}
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="border-t border-[#1E293B] py-16 lg:py-20"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
             >
               <h2 className="text-2xl md:text-3xl font-bold text-[#F8FAFC] mb-4">
                 Ready to Transform Your Business?
@@ -844,171 +806,160 @@ const ServicesPage = () => {
                 href="/contact"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 hover:scale-105 active:scale-95 group"
               >
-                Get a Free Consultation
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Contact Now
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </motion.div>
           </div>
-        </section>
+        </motion.section>
       </main>
 
       {/* Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div
+            ref={modalRef}
+            className="relative w-full max-w-2xl bg-[#0F172A] border border-[#1E293B] rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto animate-scale-in"
           >
-            <motion.div
-              ref={modalRef}
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              transition={{ type: prefersReducedMotion ? "tween" : "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-2xl bg-[#0F172A] border border-[#1E293B] rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
-            >
-              {/* Modal Header */}
-              <div className="sticky top-0 bg-[#0F172A] border-b border-[#1E293B] px-4 sm:px-6 py-4 flex items-center justify-between z-10">
-                <h3 className="text-lg sm:text-xl font-bold text-white">
-                  Request Consultation
-                </h3>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="p-1 text-[#94A3B8] hover:text-white transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-[#0F172A] border-b border-[#1E293B] px-4 sm:px-6 py-4 flex items-center justify-between z-10">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
+                Request Consultation
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-1 text-[#94A3B8] hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-              {/* Form */}
-              {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      required
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Phone Number *
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Business Details *
-                    </label>
-                    <input
-                      type="text"
-                      name="businessDetails"
-                      required
-                      value={formData.businessDetails}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
-                      placeholder="Company name & industry"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Service Required *
-                    </label>
-                    <input
-                      type="text"
-                      name="serviceRequired"
-                      required
-                      value={formData.serviceRequired}
-                      readOnly
-                      className="w-full px-4 py-3 bg-[#6366F1]/10 border border-[#6366F1]/30 rounded-lg text-[#6366F1] font-medium cursor-not-allowed"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-[#94A3B8] mb-2">
-                      Project Description *
-                    </label>
-                    <textarea
-                      name="projectDescription"
-                      required
-                      rows={4}
-                      value={formData.projectDescription}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors resize-none"
-                      placeholder="Tell us about your project requirements..."
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Submitting...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        Submit Request
-                      </>
-                    )}
-                  </button>
-                </form>
-              ) : (
-                <div className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-8 h-8 text-green-500" />
-                  </div>
-                  <h4 className="text-xl font-bold text-white mb-2">Request Submitted!</h4>
-                  <p className="text-[#94A3B8]">
-                    Thank you for your interest. Our team will contact you within 24 hours.
-                  </p>
+            {/* Form */}
+            {!isSubmitted ? (
+              <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    required
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
+                    placeholder="Enter your full name"
+                  />
                 </div>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Add gradient animation styles */}
+                <div>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Business Details *
+                  </label>
+                  <input
+                    type="text"
+                    name="businessDetails"
+                    required
+                    value={formData.businessDetails}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors"
+                    placeholder="Company name & industry"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Service Required *
+                  </label>
+                  <input
+                    type="text"
+                    name="serviceRequired"
+                    required
+                    value={formData.serviceRequired}
+                    readOnly
+                    className="w-full px-4 py-3 bg-[#6366F1]/10 border border-[#6366F1]/30 rounded-lg text-[#6366F1] font-medium cursor-not-allowed"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-2">
+                    Project Description *
+                  </label>
+                  <textarea
+                    name="projectDescription"
+                    required
+                    rows={4}
+                    value={formData.projectDescription}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-[#020617] border border-[#1E293B] rounded-lg text-white focus:outline-none focus:border-[#6366F1] transition-colors resize-none"
+                    placeholder="Tell us about your project requirements..."
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:-translate-y-0.5"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Submit Request
+                    </>
+                  )}
+                </button>
+              </form>
+            ) : (
+              <div className="p-6 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 rounded-full flex items-center justify-center animate-scale-in">
+                  <CheckCircle className="w-8 h-8 text-green-500" />
+                </div>
+                <h4 className="text-xl font-bold text-white mb-2">Request Submitted!</h4>
+                <p className="text-[#94A3B8]">
+                  Thank you for your interest. Our team will contact you within 24 hours.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Add animation styles */}
       <style jsx global>{`
         @keyframes gradient {
           0% {
@@ -1021,9 +972,38 @@ const ServicesPage = () => {
             background-position: 0% 50%;
           }
         }
+        
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes scale-in {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
         .animate-gradient {
           background-size: 200% auto;
           animation: gradient 3s ease infinite;
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out forwards;
+        }
+        
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out forwards;
         }
       `}</style>
     </>

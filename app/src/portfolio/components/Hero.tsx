@@ -154,7 +154,7 @@ const Hero = () => {
               <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full backdrop-blur-md">
                 <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-[#6366F1]" />
                 <span className="text-sm sm:text-base font-medium text-[#6366F1] tracking-wide">
-                  Your Trusted Digital Partner
+                  Welcome to Nestick Tech
                 </span>
               </span>
             </motion.div>
@@ -232,12 +232,12 @@ const Hero = () => {
             {/* 🔥 CTA Buttons - Fixed equal size */}
             <motion.div
               variants={containerVariants}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md px-2 sm:px-0"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md px-2 mb-4 sm:px-0"
             >
               {/* Primary - Book Free Consultation */}
               <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="flex-1">
                 <Link
-                  href="/contact"
+                  href="/consultation"
                   className="group relative flex items-center justify-center w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl overflow-hidden shadow-lg transition-all duration-300 text-center text-sm sm:text-base whitespace-nowrap"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
@@ -252,7 +252,7 @@ const Hero = () => {
               {/* Secondary - Get Quote */}
               <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="flex-1">
                 <Link
-                  href="/contact"
+                  href="/get-quote"
                   className="group flex items-center justify-center w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-[#0F172A]/80 backdrop-blur-md border border-[#1E293B] text-white font-semibold rounded-xl hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 text-center text-sm sm:text-base whitespace-nowrap"
                 >
                   Get Quote

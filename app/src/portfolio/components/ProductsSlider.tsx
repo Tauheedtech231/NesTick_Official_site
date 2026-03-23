@@ -76,7 +76,7 @@ const TechStackSlider = () => {
   ];
 
   return (
-    <section className="relative py-12 md:py-16 lg:py-20 bg-[#020617] overflow-hidden">
+    <section className="relative py-12 md:py-16 lg:py-20 bg-[#020617]  overflow-hidden">
       {/* Tech-inspired background - Circuit pattern */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Digital grid pattern */}
