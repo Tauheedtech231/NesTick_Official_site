@@ -21,6 +21,7 @@ import {
   MapPin,
   MessageSquare
 } from 'lucide-react';
+import TechStackPage from '../tech-stack/page';
 
 const AboutPage = () => {
   // Company stats
@@ -287,6 +288,7 @@ const AboutPage = () => {
             </div>
           </motion.div>
         </motion.div>
+        <TechStackPage/>
 
         {/* Team Hierarchy - Complete Tree Structure */}
         <motion.div

@@ -154,25 +154,24 @@ const Hero = () => {
               <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full backdrop-blur-md">
                 <Sparkles className="w-4 sm:w-5 h-4 sm:h-5 text-[#6366F1]" />
                 <span className="text-sm sm:text-base font-medium text-[#6366F1] tracking-wide">
-                  Welcome to Nestick Tech
+                  Your Trusted Digital Partner
                 </span>
               </span>
             </motion.div>
 
-            {/* 🔥 Heading (Improved Typography) */}
+            {/* 🔥 Heading - Fixed responsive issue */}
             <motion.div variants={textVariants} className="w-full">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#F8FAFC] leading-[1.1] tracking-tight">
-                Building{" "}
-                <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
-                    Scalable Digital
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#F8FAFC] leading-[1.2] tracking-tight">
+                {/* Desktop: 2 lines, Mobile: 3 lines */}
+                <span className="block lg:inline lg:whitespace-nowrap">Your</span>{' '}
+                <span className="block lg:inline">
+                  <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent relative">
+                    Digital Business
+                    {/* Gradient underline effect */}
+                    <span className="absolute left-0 -bottom-1 w-full h-2 bg-gradient-to-r from-[#6366F1]/40 to-[#8B5CF6]/40 blur-sm rounded-full"></span>
                   </span>
-
-                  {/* Gradient underline effect */}
-                  <span className="absolute left-0 bottom-1 w-full h-2 bg-gradient-to-r from-[#6366F1]/40 to-[#8B5CF6]/40 blur-sm rounded-full"></span>
-                </span>
-                <br />
-                Solutions
+                </span>{' '}
+                <span className="block lg:inline lg:whitespace-nowrap">Partner</span>
               </h1>
             </motion.div>
 
@@ -213,43 +212,50 @@ const Hero = () => {
               </div>
             </motion.div>
 
-            {/* 🔥 Description */}
+            {/* 🔥 Description - UPDATED */}
             <motion.p
               variants={textVariants}
               className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-xl leading-relaxed px-2 sm:px-0"
             >
-              We design and develop high-performance web apps, AI-powered systems,
-              and scalable digital solutions that accelerate your business growth.
+              We don&apos;t just build apps or websites — we provide complete digital solutions 
+              from idea to execution and growth.
             </motion.p>
 
-            {/* 🔥 CTA Buttons */}
+            {/* 🔥 Additional Supporting Line - NEW */}
+            <motion.p
+              variants={textVariants}
+              className="text-xs sm:text-sm text-[#6366F1]/80 max-w-xl leading-relaxed px-2 sm:px-0 font-medium"
+            >
+              We build, scale, and support digital businesses with complete solutions.
+            </motion.p>
+
+            {/* 🔥 CTA Buttons - Fixed equal size */}
             <motion.div
               variants={containerVariants}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md px-2 sm:px-0"
             >
-              {/* Primary */}
+              {/* Primary - Book Free Consultation */}
               <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="flex-1">
                 <Link
                   href="/contact"
-                  className="group relative block w-full px-4 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl overflow-hidden shadow-lg transition-all duration-300 text-center text-sm sm:text-base"
+                  className="group relative flex items-center justify-center w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl overflow-hidden shadow-lg transition-all duration-300 text-center text-sm sm:text-base whitespace-nowrap"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Get Started
-                    <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 group-hover:translate-x-1 transition" />
+                    Book Free Consultation
+                    <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 group-hover:translate-x-1 transition flex-shrink-0" />
                   </span>
-
                   {/* Glow hover effect */}
                   <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
                 </Link>
               </motion.div>
 
-              {/* Secondary */}
+              {/* Secondary - Get Quote */}
               <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="flex-1">
                 <Link
-                  href="/portfolio"
-                  className="group block w-full px-4 sm:px-6 py-3 sm:py-3.5 bg-[#0F172A]/80 backdrop-blur-md border border-[#1E293B] text-white font-semibold rounded-xl hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 text-center text-sm sm:text-base"
+                  href="/contact"
+                  className="group flex items-center justify-center w-full px-4 sm:px-5 py-3 sm:py-3.5 bg-[#0F172A]/80 backdrop-blur-md border border-[#1E293B] text-white font-semibold rounded-xl hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 text-center text-sm sm:text-base whitespace-nowrap"
                 >
-                  View Portfolio
+                  Get Quote
                 </Link>
               </motion.div>
             </motion.div>

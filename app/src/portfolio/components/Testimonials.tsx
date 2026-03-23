@@ -1,7 +1,7 @@
 // components/TestimonialsSlider.tsx
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Quote, Star } from 'lucide-react';
@@ -17,7 +17,6 @@ interface Testimonial {
 }
 
 const TestimonialsSlider = () => {
-  const [duplicatedTestimonials, setDuplicatedTestimonials] = useState<Testimonial[]>([]);
   const sliderRef = useRef<HTMLDivElement>(null);
 
   // Testimonials data
@@ -78,14 +77,12 @@ const TestimonialsSlider = () => {
     },
   ];
 
-  useEffect(() => {
-    // Duplicate testimonials for seamless infinite scroll
-    setDuplicatedTestimonials([...testimonials, ...testimonials, ...testimonials]);
-  }, []);
+  // Duplicate testimonials for seamless infinite scroll (computed at build time)
+  const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
   return (
     <section className="relative py-20 lg:py-24 bg-[#020617] overflow-hidden">
-      {/* Background elements (same as above) */}
+      {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#6366F1]/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#8B5CF6]/10 rounded-full blur-3xl" />
@@ -94,12 +91,12 @@ const TestimonialsSlider = () => {
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header (same as above) */}
+        {/* Section Header - Left Aligned */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-12"
+          className="max-w-3xl mb-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-[#0F172A] border border-[#1E293B]">
             <Quote className="w-4 h-4 text-[#6366F1]" />
@@ -114,8 +111,13 @@ const TestimonialsSlider = () => {
             </span>
           </h2>
           <p className="text-base md:text-lg text-[#94A3B8]">
-            Don't just take our word for it — hear from some of our satisfied clients
+            Don&apos;t just take our word for it — hear from some of our satisfied clients
           </p>
+          
+          {/* Decorative line */}
+          <div className="mt-4">
+            <div className="w-16 h-0.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-full" />
+          </div>
         </motion.div>
 
         {/* Continuous Slider */}
@@ -156,7 +158,7 @@ const TestimonialsSlider = () => {
 
                   {/* Content */}
                   <p className="text-[#F8FAFC] text-sm mb-6 line-clamp-4">
-                    "{testimonial.content}"
+                    {testimonial.content}
                   </p>
 
                   {/* Author */}
