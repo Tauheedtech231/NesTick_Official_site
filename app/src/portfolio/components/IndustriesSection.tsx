@@ -2,25 +2,18 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence, Variants, useScroll, useTransform } from 'framer-motion';
 import { 
   GraduationCap, 
   ShoppingBag, 
   Building2, 
   Rocket, 
   Landmark, 
-  Plane, 
   Heart,
   Sparkles,
   ArrowRight,
-  X,
-  Send,
-  CheckCircle,
-  Phone,
-  Mail,
-  User,
-  Building,
-  Briefcase,
+  ChevronLeft,
+  ChevronRight,
   LucideIcon
 } from 'lucide-react';
 import Link from 'next/link';
@@ -48,16 +41,24 @@ const IndustriesSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
   const modalRef = useRef<HTMLDivElement>(null);
-
-  const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    email: '',
-    phone: '',
-    companyName: '',
-    industry: '',
-    projectDescription: '',
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  // Parallax scroll effects
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
   });
+  
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 50]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const y4 = useTransform(scrollYProgress, [0, 1], [0, 40]);
+  const opacity1 = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.5, 0.2]);
+  const opacity2 = useTransform(scrollYProgress, [0, 0.5, 1], [0.2, 0.4, 0.1]);
+  const scale1 = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 0.9]);
 
   const industries: Industry[] = [
     {
@@ -102,14 +103,6 @@ const IndustriesSection = () => {
     },
     {
       id: 6,
-      name: "Travel",
-      icon: Plane,
-      description: "Booking systems, travel management, customer portals",
-      color: "#06B6D4",
-      gradient: "from-[#06B6D4] to-[#0891B2]",
-    },
-    {
-      id: 7,
       name: "Medical",
       icon: Heart,
       description: "Healthcare apps, patient management, telemedicine",
@@ -179,6 +172,14 @@ const IndustriesSection = () => {
     };
   }, [isModalOpen]);
 
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % industries.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + industries.length) % industries.length);
+  };
+
   // Animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -242,26 +243,80 @@ const IndustriesSection = () => {
     },
   };
 
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    email: '',
+    phone: '',
+    companyName: '',
+    industry: '',
+    projectDescription: '',
+  });
+
   return (
     <>
-      <section className="relative py-20 lg:py-28 bg-[#020617] overflow-hidden">
-        {/* Background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
-        </div>
+      <section
+        ref={sectionRef}
+        className="relative py-12 sm:py-12 lg:py-12 bg-[#020617] overflow-hidden"
+      >
+        {/* Parallax Background elements */}
+        <motion.div 
+          className="absolute inset-0 overflow-hidden"
+          style={{ y: y1 }}
+        >
+          <motion.div 
+            className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl"
+            style={{ opacity: opacity1, scale: scale1 }}
+          />
+          <motion.div 
+            className="absolute bottom-20 right-10 w-72 h-72 bg-[#8B5CF6]/5 rounded-full blur-3xl"
+            style={{ opacity: opacity2 }}
+          />
+        </motion.div>
 
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
+        {/* Parallax floating particles */}
+        <motion.div 
+          className="absolute inset-0 pointer-events-none"
+          style={{ y: y2 }}
+        >
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-[#6366F1]/20 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animation: `float ${3 + (i % 5)}s infinite ease-in-out`,
+                animationDelay: `${i * 0.3}s`,
+              }}
+            />
+          ))}
+        </motion.div>
+
+        {/* Parallax grid pattern */}
+        <motion.div 
+          className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5"
+          style={{ y: y3 }}
+        />
+
+        {/* Parallax glowing orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-[#6366F1]/10 to-[#8B5CF6]/10 rounded-full blur-3xl"
+          style={{ y: y4, x: useTransform(scrollYProgress, [0, 1], [-20, 20]) }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-[#8B5CF6]/10 to-[#6366F1]/10 rounded-full blur-3xl"
+          style={{ y: useTransform(scrollYProgress, [0, 1], [20, -20]), x: useTransform(scrollYProgress, [0, 1], [20, -20]) }}
+        />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
+          {/* Section Header with parallax */}
           <motion.div
             variants={introContainerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            className="text-center max-w-3xl mx-auto mb-12"
+            className="text-center max-w-3xl mx-auto mb-8 lg:mb-12"
+            style={{ y: useTransform(scrollYProgress, [0, 1], [0, -20]) }}
           >
             <motion.div 
               variants={fromTopVariants}
@@ -289,15 +344,16 @@ const IndustriesSection = () => {
             </motion.p>
           </motion.div>
 
-          {/* Industries Grid */}
+          {/* Desktop Grid View (hidden on mobile) */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-6"
+            className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
+            style={{ y: useTransform(scrollYProgress, [0, 1], [0, -15]) }}
           >
-            {industries.map((industry) => {
+            {industries.map((industry, index) => {
               const Icon = industry.icon;
               return (
                 <motion.div
@@ -305,6 +361,11 @@ const IndustriesSection = () => {
                   variants={itemVariants}
                   whileHover={{ y: -4 }}
                   className="group relative"
+                  style={{ 
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    y: useTransform(scrollYProgress, [0, 1], [0, -(index * 5)]),
+                    transition: "transform 0.3s ease-out"
+                  }}
                 >
                   <div className={`absolute inset-0 bg-gradient-to-r ${industry.gradient} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-sm`} />
                   
@@ -329,19 +390,92 @@ const IndustriesSection = () => {
             })}
           </motion.div>
 
-          {/* Bottom CTA */}
+          {/* Mobile Slider View (visible only on mobile) */}
+          <div className="relative sm:hidden">
+            <div className="overflow-hidden px-2">
+              <motion.div
+                ref={sliderRef}
+                className="flex"
+                animate={{ x: -currentSlide * 100 + '%' }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                {industries.map((industry) => {
+                  const Icon = industry.icon;
+                  return (
+                    <div
+                      key={industry.id}
+                      className="flex-shrink-0 w-full px-2"
+                    >
+                      <div className="group relative">
+                        <div className={`absolute inset-0 bg-gradient-to-r ${industry.gradient} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-sm`} />
+                        
+                        <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#6366F1]/30 transition-all duration-300">
+                          {/* Icon */}
+                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${industry.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                            <Icon className="w-6 h-6 text-white" />
+                          </div>
+
+                          {/* Industry Name */}
+                          <h3 className="text-lg font-bold text-[#F8FAFC] mb-2 group-hover:text-[#6366F1] transition-colors duration-300">
+                            {industry.name}
+                          </h3>
+
+                          {/* Description */}
+                          <p className="text-sm text-[#94A3B8] leading-relaxed">
+                            {industry.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
+
+            {/* Navigation Buttons */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#0F172A] border border-[#1E293B] rounded-full p-2 hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300"
+            >
+              <ChevronLeft className="w-5 h-5 text-[#6366F1]" />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#0F172A] border border-[#1E293B] rounded-full p-2 hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300"
+            >
+              <ChevronRight className="w-5 h-5 text-[#6366F1]" />
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="flex justify-center gap-2 mt-6">
+              {industries.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`transition-all duration-300 ${
+                    idx === currentSlide
+                      ? 'w-6 h-1.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-full'
+                      : 'w-1.5 h-1.5 bg-[#1E293B] rounded-full hover:bg-[#6366F1]/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom CTA with parallax */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-center mt-12 pt-8 border-t border-[#1E293B]"
+            className="text-center mt-8 pt-6 border-t border-[#1E293B]"
+            style={{ y: useTransform(scrollYProgress, [0, 1], [0, -10]) }}
           >
             <motion.p 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-[#94A3B8] mb-4"
+              className="text-[#94A3B8] mb-4 text-sm sm:text-base"
             >
               Ready to transform your business with cutting-edge digital solutions?
             </motion.p>
@@ -352,7 +486,7 @@ const IndustriesSection = () => {
             >
               <Link
                 href="/consultation"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 hover:scale-105 group"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 hover:scale-105 group text-sm sm:text-base"
               >
                 <span>Get Free Consultation</span>
                 <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
@@ -361,6 +495,25 @@ const IndustriesSection = () => {
           </motion.div>
         </div>
       </section>
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px) translateX(0px);
+            opacity: 0;
+          }
+          25% {
+            opacity: 0.3;
+          }
+          50% {
+            transform: translateY(-12px) translateX(6px);
+            opacity: 0.5;
+          }
+          75% {
+            opacity: 0.3;
+          }
+        }
+      `}</style>
     </>
   );
 };

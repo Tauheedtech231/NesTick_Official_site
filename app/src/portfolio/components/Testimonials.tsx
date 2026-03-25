@@ -1,10 +1,10 @@
 // components/TestimonialsSlider.tsx
 'use client';
 
-import { useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Image from 'next/image';
-import { Quote, Star } from 'lucide-react';
+import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Testimonial {
   id: number;
@@ -18,6 +18,8 @@ interface Testimonial {
 
 const TestimonialsSlider = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
 
   // Testimonials data
   const testimonials: Testimonial[] = [
@@ -77,78 +79,179 @@ const TestimonialsSlider = () => {
     },
   ];
 
-  // Duplicate testimonials for seamless infinite scroll (computed at build time)
-  const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+  const nextTestimonial = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const slideVariants :Variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -100 : 100,
+      opacity: 0,
+      transition: {
+        duration: 0.3,
+      },
+    }),
+  };
+
+  const imageVariants:Variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 50 : -50,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -50 : 50,
+      opacity: 0,
+      scale: 0.95,
+      transition: {
+        duration: 0.3,
+      },
+    }),
+  };
 
   return (
-    <section className="relative py-20 lg:py-24 bg-[#020617] overflow-hidden">
+    <section className="relative py-12 lg:py-16 bg-[#020617] overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#6366F1]/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#8B5CF6]/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#6366F1]/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
       </div>
 
+      {/* Grid pattern overlay */}
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header - Left Aligned */}
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
-          className="max-w-3xl mb-12"
+          className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-[#0F172A] border border-[#1E293B]">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-3 bg-[#0F172A] border border-[#1E293B]">
             <Quote className="w-4 h-4 text-[#6366F1]" />
-            <span className="text-xs lg:text-sm font-medium text-[#94A3B8]">
+            <span className="text-xs font-medium text-[#94A3B8]">
               Client Testimonials
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#F8FAFC] mb-3">
+          
+          <h2 className="text-3xl md:text-4xl font-bold text-[#F8FAFC] mb-2">
             What Our{' '}
             <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
               Clients Say
             </span>
           </h2>
-          <p className="text-base md:text-lg text-[#94A3B8]">
+          
+          <p className="text-sm text-[#94A3B8] max-w-2xl mx-auto">
             Don&apos;t just take our word for it — hear from some of our satisfied clients
           </p>
           
           {/* Decorative line */}
-          <div className="mt-4">
+          <div className="mt-3 flex justify-center">
             <div className="w-16 h-0.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-full" />
           </div>
         </motion.div>
 
-        {/* Continuous Slider */}
-        <div className="relative overflow-hidden" ref={sliderRef}>
-          <motion.div
-            className="flex gap-6"
-            animate={{
-              x: ['0%', '-50%'],
-            }}
-            transition={{
-              x: {
-                repeat: Infinity,
-                repeatType: 'loop',
-                duration: 40,
-                ease: 'linear',
-              },
-            }}
+        {/* Main Testimonial Container - Reduced Height */}
+        <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-2xl overflow-hidden">
+          {/* Navigation Buttons */}
+          <button
+            onClick={prevTestimonial}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-[#020617] border border-[#1E293B] flex items-center justify-center hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 group"
           >
-            {duplicatedTestimonials.map((testimonial, index) => (
-              <div
-                key={`${testimonial.id}-${index}`}
-                className="flex-shrink-0 w-[350px] md:w-[400px]"
-              >
-                <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 h-full hover:border-[#6366F1] transition-all duration-300 group">
-                  {/* Rating stars */}
-                  <div className="flex gap-1 mb-4">
+            <ChevronLeft className="w-4 h-4 text-[#94A3B8] group-hover:text-[#6366F1]" />
+          </button>
+          
+          <button
+            onClick={nextTestimonial}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-[#020617] border border-[#1E293B] flex items-center justify-center hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 group"
+          >
+            <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#6366F1]" />
+          </button>
+
+          {/* Content Container - Reduced min-height */}
+          <div className="grid grid-cols-1 md:grid-cols-2 min-h-[280px] md:min-h-[320px]">
+            {/* Left Side - Image */}
+            <div className="relative h-[200px] md:h-auto overflow-hidden bg-gradient-to-br from-[#6366F1]/10 to-[#8B5CF6]/10">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={`image-${currentIndex}`}
+                  custom={direction}
+                  variants={imageVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={testimonials[currentIndex].image}
+                    alt={testimonials[currentIndex].name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-transparent to-transparent md:bg-gradient-to-r md:from-[#0F172A] md:via-transparent md:to-transparent" />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Right Side - Review Content - Reduced padding */}
+            <div className="p-5 md:p-6 flex flex-col justify-center">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={`content-${currentIndex}`}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="space-y-3"
+                >
+                  {/* Quote Icon - Smaller */}
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] flex items-center justify-center">
+                    <Quote className="w-3.5 h-3.5 text-white" />
+                  </div>
+
+                  {/* Review Content - Smaller text, reduced spacing */}
+                  <p className="text-xs text-[#F8FAFC] leading-relaxed line-clamp-4">
+                    {testimonials[currentIndex].content}
+                  </p>
+
+                  {/* Rating Stars - Smaller */}
+                  <div className="flex gap-0.5">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-4 h-4 ${
-                          i < testimonial.rating
+                        className={`w-2.5 h-2.5 ${
+                          i < testimonials[currentIndex].rating
                             ? 'text-[#F59E0B] fill-[#F59E0B]'
                             : 'text-[#1E293B]'
                         }`}
@@ -156,40 +259,38 @@ const TestimonialsSlider = () => {
                     ))}
                   </div>
 
-                  {/* Content */}
-                  <p className="text-[#F8FAFC] text-sm mb-6 line-clamp-4">
-                    {testimonial.content}
-                  </p>
-
-                  {/* Author */}
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#6366F1]">
-                      <Image
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        fill
-                        className="object-cover"
-                        sizes="40px"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="text-[#F8FAFC] font-semibold text-sm">
-                        {testimonial.name}
-                      </h4>
-                      <p className="text-xs text-[#94A3B8]">
-                        {testimonial.role}, {testimonial.company}
-                      </p>
-                    </div>
+                  {/* Author Info - Smaller text */}
+                  <div>
+                    <h4 className="text-xs font-semibold text-[#F8FAFC]">
+                      {testimonials[currentIndex].name}
+                    </h4>
+                    <p className="text-[10px] text-[#94A3B8]">
+                      {testimonials[currentIndex].role}, {testimonials[currentIndex].company}
+                    </p>
                   </div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
 
-        {/* Gradient fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#020617] to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#020617] to-transparent pointer-events-none" />
+          {/* Dots Indicator - Reduced padding */}
+          <div className="flex justify-center gap-1.5 py-3 border-t border-[#1E293B]">
+            {testimonials.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setDirection(idx > currentIndex ? 1 : -1);
+                  setCurrentIndex(idx);
+                }}
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  idx === currentIndex
+                    ? 'w-5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6]'
+                    : 'w-1 bg-[#1E293B] hover:bg-[#6366F1]/50'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

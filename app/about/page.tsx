@@ -288,7 +288,7 @@ const AboutPage = () => {
             </div>
           </motion.div>
         </motion.div>
-        <TechStackPage/>
+        
 
         {/* Team Hierarchy - Complete Tree Structure */}
         <motion.div
@@ -521,6 +521,7 @@ const AboutPage = () => {
             </div>
           </div>
         </motion.div>
+        <TechStackPage/>
 
         {/* Contact Us Section */}
         <motion.div

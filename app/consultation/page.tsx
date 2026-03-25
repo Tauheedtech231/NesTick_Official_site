@@ -1,8 +1,11 @@
 // app/consultation/page.tsx
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Line, OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
 import { 
   Sparkles,
   Send,
@@ -16,7 +19,6 @@ import {
   Calendar,
   Clock,
   MessageSquare,
-  Star,
   Shield,
   Rocket
 } from 'lucide-react';
@@ -33,10 +35,271 @@ interface FormData {
   budget: string;
 }
 
+// Helper function to generate deterministic random positions
+const generateParticlePositions = (count: number, seed: number = 0.5) => {
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    // Use deterministic values based on index to avoid Math.random
+    const t = (i / count) * Math.PI * 2 * seed;
+    const theta = t;
+    const phi = Math.acos(2 * (i / count) - 1);
+    const r = 2.5 + (i % 3) * 0.5;
+    
+    positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i * 3 + 2] = r * Math.cos(phi);
+  }
+  return positions;
+};
+
+// 3D Scene Component for Background
+const ConsultationScene = () => {
+  const groupRef = useRef<THREE.Group>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Generate connecting lines
+  const lines = useMemo(() => {
+    const points = [];
+    for (let i = 0; i < 30; i++) {
+      const angle = (i / 30) * Math.PI * 2;
+      const radius = 2.5;
+      points.push(new THREE.Vector3(Math.cos(angle) * radius, Math.sin(angle * 2) * 1.5, Math.sin(angle) * radius));
+    }
+    return points;
+  }, []);
+
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    if (groupRef.current) {
+      groupRef.current.rotation.y = time * 0.1;
+      groupRef.current.rotation.x = Math.sin(time * 0.2) * 0.1;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Central glowing sphere */}
+      <mesh>
+        <sphereGeometry args={[1.2, 32, 32]} />
+        <meshPhongMaterial
+          color="#6366F1"
+          emissive="#8B5CF6"
+          emissiveIntensity={0.8}
+          transparent
+          opacity={0.6}
+        />
+      </mesh>
+
+      {/* Inner wireframe sphere */}
+      <mesh>
+        <sphereGeometry args={[1.5, 24, 24]} />
+        <meshBasicMaterial
+          color="#A78BFA"
+          wireframe
+          transparent
+          opacity={0.3}
+        />
+      </mesh>
+
+      {/* Floating rings */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.0, 0.05, 64, 200]} />
+        <meshStandardMaterial color="#6366F1" emissive="#6366F1" emissiveIntensity={0.5} />
+      </mesh>
+      
+      <mesh rotation={[Math.PI / 3, Math.PI / 4, 0]}>
+        <torusGeometry args={[2.3, 0.05, 64, 200]} />
+        <meshStandardMaterial color="#8B5CF6" emissive="#8B5CF6" emissiveIntensity={0.4} />
+      </mesh>
+
+      <mesh rotation={[Math.PI / 4, Math.PI / 2, Math.PI / 3]}>
+        <torusGeometry args={[1.8, 0.05, 64, 200]} />
+        <meshStandardMaterial color="#06B6D4" emissive="#06B6D4" emissiveIntensity={0.3} />
+      </mesh>
+
+      {/* Connecting lines */}
+      <Line
+        points={lines}
+        color="#6366F1"
+        lineWidth={1}
+        transparent
+        opacity={0.5}
+      />
+    </group>
+  );
+};
+
+// 3D Model for Left Column with Feature Representations
+const ConsultationModel = () => {
+  const groupRef = useRef<THREE.Group>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Generate particle positions deterministically
+  const particleCount = isMobile ? 150 : 300;
+  const particlePositions = useMemo(() => generateParticlePositions(particleCount, 0.3), [particleCount]);
+
+  // Feature nodes representing: 30-Minute Session, Expert Advice, Flexible Scheduling, 100% Confidential
+  const featureNodes = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const nodes: any[] = [];
+    const features = [
+      { name: '30-Minute Session', color: '#6366F1', angle: 0 },
+      { name: 'Expert Advice', color: '#22C55E', angle: Math.PI / 2 },
+      { name: 'Flexible Scheduling', color: '#F59E0B', angle: Math.PI },
+      { name: '100% Confidential', color: '#EF4444', angle: Math.PI * 1.5 }
+    ];
+    
+    features.forEach((feature) => {
+      const radius = 2.2;
+      const x = Math.cos(feature.angle) * radius;
+      const z = Math.sin(feature.angle) * radius;
+      const y = Math.sin(feature.angle * 2) * 0.8;
+      
+      nodes.push({
+        position: new THREE.Vector3(x, y, z),
+        color: feature.color,
+        name: feature.name
+      });
+    });
+    return nodes;
+  }, []);
+
+  // Create connecting lines between feature nodes
+  const connectionLines = useMemo(() => {
+    const lines = [];
+    for (let i = 0; i < featureNodes.length; i++) {
+      for (let j = i + 1; j < featureNodes.length; j++) {
+        lines.push([featureNodes[i].position, featureNodes[j].position]);
+      }
+    }
+    return lines;
+  }, [featureNodes]);
+
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    if (groupRef.current) {
+      groupRef.current.rotation.y = time * 0.1;
+      groupRef.current.rotation.x = Math.sin(time * 0.15) * 0.05;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Central core */}
+      <mesh>
+        <sphereGeometry args={[1.0, 48, 48]} />
+        <meshPhongMaterial
+          color="#6366F1"
+          emissive="#8B5CF6"
+          emissiveIntensity={0.7}
+          transparent
+          opacity={0.8}
+          shininess={60}
+        />
+      </mesh>
+
+      {/* Outer wireframe sphere */}
+      <mesh>
+        <sphereGeometry args={[1.8, 32, 32]} />
+        <meshBasicMaterial
+          color="#A78BFA"
+          wireframe
+          transparent
+          opacity={0.2}
+        />
+      </mesh>
+
+      {/* Rotating rings */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.5, 0.04, 64, 200]} />
+        <meshStandardMaterial color="#6366F1" emissive="#6366F1" emissiveIntensity={0.5} />
+      </mesh>
+      
+      <mesh rotation={[Math.PI / 3, Math.PI / 2, 0]}>
+        <torusGeometry args={[1.9, 0.04, 64, 200]} />
+        <meshStandardMaterial color="#8B5CF6" emissive="#8B5CF6" emissiveIntensity={0.4} />
+      </mesh>
+
+      {/* Feature nodes */}
+      {featureNodes.map((node, i) => (
+        <mesh key={i} position={[node.position.x, node.position.y, node.position.z]}>
+          <sphereGeometry args={[0.12, 24, 24]} />
+          <meshStandardMaterial color={node.color} emissive={node.color} emissiveIntensity={0.6} />
+        </mesh>
+      ))}
+
+      {/* Connecting lines between feature nodes */}
+      {connectionLines.map((line, i) => (
+        <Line
+          key={i}
+          points={line}
+          color="#6366F1"
+          lineWidth={0.8}
+          transparent
+          opacity={0.4}
+        />
+      ))}
+
+      {/* Floating particles */}
+     <points>
+  <bufferGeometry>
+    <bufferAttribute
+      attach="attributes-position"
+      args={[particlePositions, 3]} // ✅ array + itemSize yahan pass karo
+    />
+  </bufferGeometry>
+  <pointsMaterial
+    size={isMobile ? 0.04 : 0.06}
+    color="#A78BFA"
+    transparent
+    opacity={0.4}
+    blending={THREE.AdditiveBlending}
+  />
+</points>
+
+      {/* Arrows pointing to nodes */}
+      {featureNodes.map((node, i) => (
+        <mesh key={`arrow-${i}`} position={[node.position.x * 0.7, node.position.y * 0.7, node.position.z * 0.7]}>
+          <coneGeometry args={[0.05, 0.15, 8]} />
+          <meshStandardMaterial color={node.color} emissive={node.color} emissiveIntensity={0.5} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
+
 const ConsultationPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const sectionRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
@@ -87,13 +350,11 @@ const ConsultationPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     setIsSubmitting(false);
     setIsSubmitted(true);
     
-    // Reset form after 5 seconds
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({
@@ -108,6 +369,14 @@ const ConsultationPage = () => {
       });
     }, 5000);
   };
+
+  // Features data
+  const features = [
+    { icon: Clock, text: "30-Minute Session", color: "#6366F1", iconBg: "bg-[#6366F1]/10" },
+    { icon: MessageSquare, text: "Expert Advice", color: "#22C55E", iconBg: "bg-green-500/10" },
+    { icon: Calendar, text: "Flexible Scheduling", color: "#F59E0B", iconBg: "bg-orange-500/10" },
+    { icon: Shield, text: "100% Confidential", color: "#EF4444", iconBg: "bg-red-500/10" },
+  ];
 
   // Animation variants
   const containerVariants: Variants = {
@@ -172,8 +441,28 @@ const ConsultationPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#020617] pt-20 lg:pt-24">
-      <section ref={sectionRef} className="relative py-20 lg:py-24 overflow-hidden">
+    <main className="min-h-screen bg-[#020617] pt-20 lg:pt-24 relative overflow-hidden">
+      {/* Background 3D Canvas */}
+      <div className="absolute inset-0 z-0 opacity-30 md:opacity-40">
+        <Canvas
+          camera={{ position: [0, 0, 8], fov: 45 }}
+          gl={{ antialias: true, alpha: true }}
+          dpr={isMobile ? [1, 1] : [1, 1.5]}
+        >
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} intensity={1} />
+          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8B5CF6" />
+          <ConsultationScene />
+          <OrbitControls 
+            enableZoom={false} 
+            enablePan={false} 
+            autoRotate={false}
+            rotateSpeed={0.5}
+          />
+        </Canvas>
+      </div>
+
+      <section ref={sectionRef} className="relative z-10 py-12 lg:py-16 overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl" />
@@ -186,7 +475,7 @@ const ConsultationPage = () => {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            {/* Left Column - Info */}
+            {/* Left Column - Info with 3D Model */}
             <motion.div
               variants={introContainerVariants}
               initial="hidden"
@@ -225,26 +514,21 @@ const ConsultationPage = () => {
                 explore opportunities, and create a tailored roadmap for your digital transformation.
               </motion.p>
 
-              {/* Features Grid */}
+              {/* Features Grid - No backgrounds */}
               <motion.div 
                 variants={containerVariants}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4"
+                className="grid grid-cols-2 gap-4 pt-4"
               >
-                {[
-                  { icon: Clock, text: "30-Minute Session", color: "#6366F1" },
-                  { icon: MessageSquare, text: "Expert Advice", color: "#22C55E" },
-                  { icon: Star, text: "No Obligation", color: "#F59E0B" },
-                  { icon: Shield, text: "100% Confidential", color: "#EF4444" },
-                ].map((feature, index) => {
+                {features.map((feature, index) => {
                   const Icon = feature.icon;
                   return (
                     <motion.div
                       key={index}
                       variants={itemVariants}
-                      className="flex items-center gap-3 p-3 bg-[#0F172A]/50 rounded-lg border border-[#1E293B]"
+                      className="flex items-center gap-3 p-2"
                     >
-                      <div className={`w-8 h-8 rounded-lg bg-[${feature.color}]/10 flex items-center justify-center`}>
-                        <Icon className="w-4 h-4 text-[#6366F1]" />
+                      <div className={`w-8 h-8 rounded-full ${feature.iconBg} flex items-center justify-center`}>
+                        <Icon className="w-4 h-4" style={{ color: feature.color }} />
                       </div>
                       <span className="text-sm text-[#F8FAFC]">{feature.text}</span>
                     </motion.div>
@@ -252,32 +536,30 @@ const ConsultationPage = () => {
                 })}
               </motion.div>
 
-              {/* Trust Indicators */}
+              {/* 3D Model Container */}
               <motion.div 
                 variants={fromBottomVariants}
-                className="pt-8 border-t border-[#1E293B]"
+                className="relative h-[320px] md:h-[380px] lg:h-[420px] w-full rounded-2xl overflow-hidden mt-4"
               >
-                <p className="text-sm text-[#94A3B8] mb-4">
-                  Trusted by 200+ businesses worldwide
-                </p>
-                <div className="flex gap-4">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] border-2 border-[#020617] flex items-center justify-center"
-                      >
-                        <span className="text-xs text-white font-bold">CEO</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <Star key={i} className="w-4 h-4 text-[#F59E0B] fill-[#F59E0B]" />
-                    ))}
-                  </div>
-                  <span className="text-sm text-[#94A3B8]">4.9/5 Rating</span>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-[#6366F1]/5 via-transparent to-[#8B5CF6]/5 rounded-2xl" />
+                <Canvas
+                  camera={{ position: [0, 0, 5.5], fov: 45 }}
+                  gl={{ antialias: true, alpha: true }}
+                  dpr={isMobile ? [1, 1] : [1, 1.5]}
+                  className="rounded-2xl"
+                >
+                  <ambientLight intensity={0.6} />
+                  <pointLight position={[5, 5, 5]} intensity={1.2} color="#6366F1" />
+                  <pointLight position={[-5, -3, 4]} intensity={0.8} color="#8B5CF6" />
+                  <pointLight position={[0, 5, 3]} intensity={0.5} color="#06B6D4" />
+                  <ConsultationModel />
+                  <OrbitControls 
+                    enableZoom={false} 
+                    enablePan={false} 
+                    autoRotate={false}
+                    rotateSpeed={0.8}
+                  />
+                </Canvas>
               </motion.div>
             </motion.div>
 
@@ -290,7 +572,7 @@ const ConsultationPage = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-2xl blur-xl opacity-20" />
               
-              <div className="relative bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 sm:p-8">
+              <div className="relative bg-[#0F172A]/80 backdrop-blur-md border border-[#1E293B] rounded-2xl p-6 sm:p-8">
                 {!isSubmitted ? (
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <h2 className="text-2xl font-bold text-white mb-6">

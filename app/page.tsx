@@ -5,9 +5,10 @@ import Services from './src/portfolio/components/Services'
 
 import TestimonialsSlider from './src/portfolio/components/Testimonials'
 import FAQ from './src/portfolio/components/FAQ'
-import WhyChooseUs from './src/portfolio/components/WhyChooseUs'
-import TechStackSlider from './src/portfolio/components/ProductsSlider'
+
 import IndustriesSection from './src/portfolio/components/IndustriesSection'
+import PartnersSlider from './src/portfolio/components/ProductsSlider'
+import ProductsPage from './src/portfolio/components/Products'
 
 
 function page() {
@@ -16,11 +17,11 @@ function page() {
     
       
       <Hero/>
-      <TechStackSlider/>
+      <PartnersSlider/>
       
       <Services/>
       <IndustriesSection/>
-     
+     <ProductsPage/>
       
       <TestimonialsSlider/>
       {/* <WhyChooseUs/> */}

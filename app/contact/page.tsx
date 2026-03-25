@@ -41,6 +41,7 @@ const ContactPage = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const sectionRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -226,57 +227,121 @@ const ContactPage = () => {
 
   return (
     <main className="min-h-screen bg-[#020617] pt-20 lg:pt-24 overflow-hidden">
+      {/* Hero Section with Video Background */}
+      <div className="relative h-[60vh] min-h-[500px] overflow-hidden">
+        {/* Background Video */}
+        <div className="absolute inset-0 z-0">
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            style={{ objectPosition: 'center' }}
+          >
+            <source src="/contact.mp4" type="video/mp4" />
+          </video>
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/80 via-[#020617]/60 to-[#020617]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#6366F1]/20 to-[#8B5CF6]/20" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A]/80 backdrop-blur-sm border border-[#1E293B] mb-6"
+            >
+              <Sparkles className="w-4 h-4 text-[#6366F1]" />
+              <span className="text-sm font-medium bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
+                Get in Touch
+              </span>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-5xl md:text-5xl lg:text-5xl font-bold text-[#F8FAFC] mb-4"
+            >
+              Contact{' '}
+              <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
+                Us
+              </span>
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg lg:text-xl text-[#94A3B8] max-w-2xl mx-auto leading-relaxed"
+            >
+              Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-8 flex flex-wrap gap-4 justify-center"
+            >
+              <Link
+                href="#contact-form"
+                className="px-6 py-3 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300 flex items-center gap-2"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="tel:+923001234567"
+                className="px-6 py-3 bg-[#0F172A] border border-[#1E293B] text-white font-semibold rounded-lg hover:border-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-300 flex items-center gap-2"
+              >
+                <Phone className="w-4 h-4" />
+                Call Now
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          <span className="text-xs text-[#94A3B8]">Scroll to explore</span>
+          <div className="w-6 h-10 border-2 border-[#1E293B] rounded-full flex justify-center">
+            <motion.div
+              animate={{ y: [0, 12, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+              className="w-1.5 h-1.5 bg-[#6366F1] rounded-full mt-2"
+            />
+          </div>
+        </motion.div>
+      </div>
+
       {/* Background decorative elements */}
-      <div className="fixed inset-0 overflow-hidden">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-[#6366F1]/5 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-72 h-72 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#22C55E]/5 rounded-full blur-3xl" />
       </div>
 
       {/* Grid pattern overlay */}
-      <div className="fixed inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
+      <div className="fixed inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        {/* Header Section */}
-        <motion.div
-          variants={introContainerVariants}
-          initial="hidden"
-          animate="visible"
-          className="text-center max-w-3xl mx-auto mb-12 lg:mb-16"
-        >
-          <motion.div 
-            variants={fromTopVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A] border border-[#1E293B] mb-4"
-          >
-            <Sparkles className="w-4 h-4 text-[#6366F1]" />
-            <span className="text-sm font-medium bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
-              Get in Touch
-            </span>
-          </motion.div>
-          
-          <motion.h1 
-            variants={fromTopVariants}
-            className="text-4xl md:text-5xl lg:text-5xl font-bold text-[#F8FAFC] mb-4"
-          >
-            Contact{' '}
-            <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
-              Us
-            </span>
-          </motion.h1>
-          
-          <motion.p 
-            variants={fromTopVariants}
-            className="text-base lg:text-lg text-[#94A3B8] max-w-2xl mx-auto leading-relaxed"
-          >
-            Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
-          </motion.p>
-        </motion.div>
-
+      <div id="contact-form" className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         {/* Contact Info Cards */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12 lg:mb-16"
         >
           {contactInfo.map((info, index) => {
@@ -311,7 +376,8 @@ const ContactPage = () => {
           <motion.div
             variants={fromLeftVariants}
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ once: true }}
             className="relative"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] rounded-2xl blur-xl opacity-20" />
@@ -460,7 +526,8 @@ const ContactPage = () => {
           <motion.div
             variants={fromRightVariants}
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ once: true }}
             className="space-y-6"
           >
             {/* Features Grid */}
@@ -544,9 +611,6 @@ const ContactPage = () => {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-
-        
-            
           </motion.div>
         </div>
       </div>

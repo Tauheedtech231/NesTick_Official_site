@@ -77,7 +77,7 @@ const Navbar = () => {
                 href="/contact"
                 className="relative px-6 py-2.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-sm lg:text-base font-semibold rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-lg hover:shadow-[#6366F1]/25 hover:scale-105 active:scale-95"
               >
-                <span className="relative z-10">Get Started</span>
+                <span className="relative z-10">Contact Us</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
             </div>
@@ -145,7 +145,7 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
                 className="block w-full px-6 py-3.5 bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-center text-base font-semibold rounded-xl hover:shadow-lg hover:shadow-[#6366F1]/25 transition-all duration-300"
               >
-                Get Started
+                Contact Us
               </Link>
             </div>
           </div>

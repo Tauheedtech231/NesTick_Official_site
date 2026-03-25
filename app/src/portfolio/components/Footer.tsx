@@ -127,8 +127,8 @@ const Footer = () => {
               <p className="text-[#94A3B8] text-xs italic leading-relaxed mb-2">
                 &quot;We believe in building technology that empowers businesses and transforms ideas into reality. Our mission is to deliver excellence through innovation and dedication.&quot;
               </p>
-              <p className="text-[#F8FAFC] text-xs font-semibold">— Abdullah Amin</p>
-              <p className="text-[#6366F1] text-[10px]">CEO & Founder, Nestick Tech</p>
+              <p className="text-[#F8FAFC] text-xs font-semibold">— Mr. Hamza Hassan</p>
+              <p className="text-[#6366F1] text-[10px]">CEO of Nestick Tech</p>
             </div>
 
             {/* Contact Info */}

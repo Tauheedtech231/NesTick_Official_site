@@ -20,41 +20,41 @@ const Services = () => {
   const services: Service[] = [
     {
       id: 1,
-      icon: '🌐',
-      title: 'Web Development',
-      description: 'Custom web applications built with modern frameworks like Next.js, React, and Node.js for scalable performance.',
+      icon: '💻',
+      title: 'Development',
+      description: 'Custom web and mobile applications built with modern frameworks like Next.js, React, and Node.js for scalable performance.',
       color: '#6366F1',
       gradient: 'from-[#6366F1] to-[#8B5CF6]',
     },
     {
       id: 2,
-      icon: '📱',
-      title: 'Mobile App Development',
-      description: 'Cross-platform mobile applications for Android and iOS with exceptional user experiences.',
+      icon: '🤖',
+      title: 'AI Solutions',
+      description: 'Intelligent AI-powered solutions including machine learning models, automation, and smart analytics for business transformation.',
       color: '#8B5CF6',
       gradient: 'from-[#8B5CF6] to-[#6366F1]',
     },
     {
       id: 3,
-      icon: '🍎',
-      title: 'iOS Development',
-      description: 'Native iOS applications built with Swift and SwiftUI for premium Apple ecosystem experiences.',
+      icon: '🔒',
+      title: 'IT & Cybersecurity',
+      description: 'Comprehensive security solutions, threat detection, and IT infrastructure protection to safeguard your digital assets.',
       color: '#22C55E',
       gradient: 'from-[#22C55E] to-[#86EFAC]',
     },
     {
       id: 4,
-      icon: '💼',
-      title: 'Enterprise Software (CRM/ERP)',
-      description: 'Custom CRM and ERP solutions to streamline business operations, manage clients, and optimize workflows.',
+      icon: '🛒',
+      title: 'E-commerce Solutions',
+      description: 'End-to-end e-commerce platforms with secure payment gateways, inventory management, and seamless user experiences.',
       color: '#F59E0B',
       gradient: 'from-[#F59E0B] to-[#FBBF24]',
     },
     {
       id: 5,
-      icon: '🎨',
-      title: 'UI/UX Design & Prototyping',
-      description: 'User-centered design solutions with interactive prototypes for seamless digital experiences.',
+      icon: '🎯',
+      title: 'Complete Business Guidance',
+      description: 'Strategic consulting, digital transformation, and expert guidance to help your business scale and succeed.',
       color: '#EF4444',
       gradient: 'from-[#EF4444] to-[#F87171]',
     },
@@ -147,7 +147,7 @@ const Services = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-12 sm:py-16 lg:py-24 bg-[#020617] overflow-hidden"
+      className="relative py-8 sm:py-12 lg:py-12 bg-[#020617] overflow-hidden"
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -173,13 +173,13 @@ const Services = () => {
             className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full mb-3 sm:mb-4"
           >
             <span className="text-[#6366F1] animate-pulse">✨</span>
-            <span className="text-xs sm:text-sm font-medium text-[#6366F1]">Our Services</span>
+            <span className="text-xs sm:text-sm font-medium text-[#6366F1] ml-[.5rem]">Our Services</span>
           </motion.div>
           
           {/* Heading */}
           <motion.h2 
             variants={fromLeftVariants}
-            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-4 leading-tight"
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 ml-[.5rem] sm:mb-4 leading-tight"
           >
             Comprehensive Digital{' '}
             <span className="bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] bg-clip-text text-transparent">
@@ -190,7 +190,7 @@ const Services = () => {
           {/* Description - Updated Subheading */}
           <motion.p 
             variants={fromLeftVariants}
-            className="text-sm sm:text-base lg:text-lg text-[#94A3B8] max-w-2xl leading-relaxed"
+            className="text-sm sm:text-base ml-[.5rem] lg:text-lg text-[#94A3B8] max-w-2xl leading-relaxed"
           >
             Complete solutions tailored for your business needs
           </motion.p>
